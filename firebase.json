@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "fir-andina-admin",
+  "private_key_id": "7e94c96efc763e019579fc902c1bcd9d2c35f410",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQCs3vubUwH/riod\nY+YVaYTRyQW3H8/8MlE1hnfVV7ZoxY6uW0HMZnZEwj2TRC06ph3yfqn/wQXTPb6o\n3djVpwKe2pdsAUUu3HDtjRdFvVCRRtum1azAQi4yrQVNe1IUFyA2rN9IncS2QR4a\nClgdJLmzbpai4ZU0Y0GJd51yiT2ENBY1tWueedLEIpL/jaAmXNXOzsJxN1iFX74g\nZ1t4XpGmx1xd8vjDNLp+p9uv63THzHOD4gGEpDMYKU93TuQjOZ8dvy54jGSD6hh1\nYASuSPPwmF0vuML8OJAK/87T93CusSkbptD3I/mSenCFiLQqmoJrA2Utt5tX0R3U\nZjNHuJMhAgMBAAECggEANpNG96hjDyca4KBzOPtRFTHTfharAMGZ5b4IAvBoA/eq\nrdzdjvwiBl8UNXPmm4dqGO5oGPgFMMVjdchj9j99kk0MVOqpvruVY0mRuVClKNgn\n7Cm1GhVKpHD/JZDzPqh2YQx+iVxVh/xS1oHBg6Hehok5QT7abemP/SgoKsqtAxkx\nf3H4gFmMhLxOLkrkyHOwCXblyQ/uj7XCE0C7nYjs6RplrqDeDPubKTNP9Eo5T2pa\nEyNRx+hGzG9s5w4qPuJTZi9DGDaNXy5VImYUKhsJcXEie3j/Y7xFXHovQ5MlwRcO\nmK1jErUiSNMKNyN7sJaELTUtevTO0jTYFwIYxweDyQKBgQDffNKpzDc+yJkbitfW\nOh6GAsO4hWs3HOzRFQyc0eBSWZjxgY+KsEjKnJ5rKsb4/DWnGKD3xhSfSNTcNNhh\nC8nuaLUJX3O/qSXk27CrDv4lOLDEHyK4/qiSBVHYRzOlMY6LM5cmuoB/N5DierU+\n1Esnh2r5hLVpc8VaxotFRbyFfwKBgQDGBRYIMhoIb1bZZOihBn5Mqi2+BlqGbTiT\nsqdl24SG/bR1Sob1CrXKW49TxRWqX0dk4w7kCmhL3Rxb0agDY00dwfLxHNZamCc1\nGc5ZpQsRFPfbbT4UhffQYX5na6Y056hmIbhdAK0EienwHAdESgiFlGpVomXTeKa+\nelcol8t3XwKBgQCLFZG9XnxbNFgkzem5Rv5MBFht84pgCD5ReLoatnrWhTArzKfa\ndg83GPV2WG7v8XYqgadbzAh1gMwIJ1MqQj3vg3Z3WNIeS1Rr81Ulf/UmkPthcscX\nPlUGWw0uflFj002U0AyXa6YghiJC8H7vlQsYlKw8kRydfhEqhzmRaO8EXQKBgQCW\nd7DpI2ECvc/Ju1LFYRDBoqLFfUB2WzIdkSiATpDino/sfGgWdT/z9yTu65ht8J5o\ne9yJzZq44tg0sRgxEti7XvAC5P3As1M/l09kcPP60+sPEnCU2cOX1S1e2r7d/pXI\nnaDhEq1mAIIB0Np4uqTFFCTE03T6fvh9TqtCDi4ukwKBgQCgjBOYHMChm26wqMAz\nMk2Uooi/Tcha929AOrryOB3JCaQTjblIJCfIrAlppPoEHQvIePnwI44LuDbukLHF\n0afVlom8VTiSlgrHUiZftmhPjE3YCMlIJfelSJOu+B1AydGScukCZI7ZdqbthZ60\n8G83BjkMOkHSH/jqESm1Z8qFPQ==\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-24uhi@fir-andina-admin.iam.gserviceaccount.com",
+  "client_id": "108502374749795445878",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-24uhi%40fir-andina-admin.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

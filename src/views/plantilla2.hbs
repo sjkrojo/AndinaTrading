@@ -1,0 +1,27 @@
+<div class="container mt-5 text-center">
+    <h1>Página Principal</h1>
+    <div class="mt-4">
+
+        <button id="botonEvento" class="btn btn-primary m-2">Girar ruleta</button>
+
+        <script src="/socket.io/socket.io.js"></script>
+
+        <script>
+            const socket = io();
+            const id = '{{id}}'; // Asegúrate de que esta variable esté definida correctamente
+            
+            // Enviar un evento al servidor cuando se hace clic en el botón
+            document.getElementById('botonEvento').addEventListener('click', () => {
+                const data = { mensaje: '' };
+                socket.emit('evento_cliente', data);
+                
+                // Redirigir a la URL después de emitir el evento
+                window.location.href = `/ruletagirada/${id}`;
+            });
+        </script>
+    </div>
+</div>
+
+<!-- Bootstrap JS y dependencias -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"></script>

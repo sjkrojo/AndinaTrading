@@ -1,0 +1,14 @@
+<div class="voting-box">
+    <h1>Votación Activa</h1>
+    <form id="votingForm" name="votacion" action="/voto/{{resultado.id}}" method="POST">
+
+        {{#each resultado.sectores}}
+        <div class="option">
+            <input type="radio" id="opcion1" name="opcion" value="{{label}}" required>
+            <label for="{{label}}">{{label}}</label>
+        </div>
+        {{/each}}
+
+        <button type="submit" class="btn btn-primary m-2">Votar</button>
+    </form>
+</div>

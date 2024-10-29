@@ -1,0 +1,31 @@
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap");
+      
+    #sectors-list {
+      display: none;
+    }
+
+    </style>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+
+    <div id="spin_the_wheel">
+      <canvas id="wheel" width="500" height="500"></canvas>
+      <div id="spin">Girar</div>
+    </div>
+
+
+        <form action="/menuadmin/{{resultado.id}}" method="GET">
+        <button type="submit" class="btn btn-primary m-2">Volver</button>
+    </form>
+
+
+  <ul id="sectors-list">
+    {{#each resultado.sectores}}
+    <li data-color="{{color}}" data-text="{{text}}">{{label}}</li>
+    {{/each}}
+  </ul>
+
+
+    <script  src="/socket.io/socket.io.js"></script>
+    <script defer src="/script.js"></script>

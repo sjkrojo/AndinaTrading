@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Inversionista - Andina Trading</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .stock-chart {
+            display: none;
+            width: 100%;
+            max-width: 600px;
+            height: 300px;
+            background-color: #e9ecef;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .scrolling-wrapper {
+            display: flex;
+            overflow-x: auto;
+            gap: 1rem;
+            padding: 1rem;
+            scroll-behavior: smooth;
+        }
+        .scrolling-wrapper .card {
+            min-width: 200px;
+            flex: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container my-4">
+        <!-- Barra Superior con Título y Botón de Cerrar Sesión -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="text-primary">Portal Inversionista - Andina Trading</h1>
+            <button class="btn btn-danger">Cerrar Sesión</button>
+        </div>
+
+        <!-- Selección de País -->
+        <div class="mb-4">
+            <label for="country-select" class="form-label">Selecciona un país:</label>
+            <select id="country-select" class="form-select" onchange="filterStocksByCountry()">
+                <option value="all">Todos los Países</option>
+                <option value="colombia">Colombia</option>
+                <option value="argentina">Argentina</option>
+                <option value="chile">Chile</option>
+            </select>
+        </div>
+
+        <!-- Sección de Acciones Disponibles para Comprar -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                Acciones Disponibles para Comprar
+            </div>
+            <div class="scrolling-wrapper" id="available-stocks">
+                <!-- Acciones por País -->
+                <div class="card text-center stock" data-country="colombia">
+                    <div class="card-body">
+                        <h5 class="card-title">Acción CO-A</h5>
+                        <p class="card-text">$100</p>
+                        <button class="btn btn-success">Comprar</button>
+                    </div>
+                </div>
+                <div class="card text-center stock" data-country="argentina">
+                    <div class="card-body">
+                        <h5 class="card-title">Acción AR-A</h5>
+                        <p class="card-text">$150</p>
+                        <button class="btn btn-success">Comprar</button>
+                    </div>
+                </div>
+                <div class="card text-center stock" data-country="chile">
+                    <div class="card-body">
+                        <h5 class="card-title">Acción CL-A</h5>
+                        <p class="card-text">$200</p>
+                        <button class="btn btn-success">Comprar</button>
+                    </div>
+                </div>
+                <!-- Añade más tarjetas aquí para otras acciones -->
+            </div>
+        </div>
+
+        <!-- Sección de Estado de Ganancias -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                Estado de Ganancias
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Ganancias Totales: <span class="text-success">$3,500</span></h5>
+                <p class="card-text">Actualizado al día de hoy.</p>
+            </div>
+        </div>
+
+        <!-- Sección de Acciones del Portafolio -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                Tus Acciones
+            </div>
+            <div class="scrolling-wrapper" id="portfolio-stocks">
+                <div class="card text-center stock" data-country="colombia" onclick="showChart('Acción CO-A')">
+                    <div class="card-body">
+                        <h5 class="card-title">Acción CO-A</h5>
+                        <p class="card-text">10 acciones</p>
+                    </div>
+                </div>
+                <div class="card text-center stock" data-country="argentina" onclick="showChart('Acción AR-A')">
+                    <div class="card-body">
+                        <h5 class="card-title">Acción AR-A</h5>
+                        <p class="card-text">5 acciones</p>
+                    </div>
+                </div>
+                <div class="card text-center stock" data-country="chile" onclick="showChart('Acción CL-A')">
+                    <div class="card-body">
+                        <h5 class="card-title">Acción CL-A</h5>
+                        <p class="card-text">8 acciones</p>
+                    </div>
+                </div>
+                <!-- Añade más tarjetas aquí para otras acciones del portafolio -->
+            </div>
+        </div>
+
+        <!-- Gráfico de Evolución de Acción -->
+        <div class="stock-chart" id="stock-chart">
+            <h5 id="stock-chart-title" class="text-center py-3"></h5>
+            <!-- Aquí se integraría el gráfico con librerías como Chart.js -->
+            <canvas id="chart" width="600" height="300"></canvas>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS y Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
+    <script>
+        // Función para mostrar el gráfico de la acción seleccionada
+        function showChart(stockName) {
+            document.getElementById('stock-chart').style.display = 'block';
+            document.getElementById('stock-chart-title').innerText = 'Evolución de ' + stockName + ' en los últimos 5 días';
+
+            // Datos de ejemplo para el gráfico
+            const labels = ['Día 1', 'Día 2', 'Día 3', 'Día 4', 'Día 5'];
+            const data = [Math.random() * 100 + 50, Math.random() * 100 + 50, Math.random() * 100 + 50, Math.random() * 100 + 50, Math.random() * 100 + 50];
+
+            // Configuración del gráfico con Chart.js
+            const ctx = document.getElementById('chart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: stockName,
+                        data: data,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        tension: 0.1,
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+
+        // Función para filtrar las acciones por país
+        function filterStocksByCountry() {
+            const selectedCountry = document.getElementById("country-select").value;
+            const stocks = document.querySelectorAll(".stock");
+
+            stocks.forEach(stock => {
+                if (selectedCountry === "all" || stock.dataset.country === selectedCountry) {
+                    stock.style.display = "block";
+                } else {
+                    stock.style.display = "none";
+                }
+            });
+        }
+    </script>
+</body>
+</html>
