@@ -1,5 +1,5 @@
 const { db } = require('../firebase.js');
-const CountryDTO = require('./countryDTO.js');
+const CountryDTO = require('../countrydto.js');
 
 class CountryDAO {
     constructor() {
