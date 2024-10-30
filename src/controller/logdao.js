@@ -1,6 +1,6 @@
 // dao/LogDAO.js
 const { db } = require('../firebase')
-const LogDTO = require('../logdto');
+const LogDTO = require('../model/logdto');
 
 class LogDAO {
   constructor() {

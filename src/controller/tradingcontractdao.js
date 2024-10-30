@@ -1,6 +1,6 @@
 // dao/TradingContractDAO.js
 const { db } = require('../firebase')
-const TradingContractDTO = require('../tradingcontractdto');
+const TradingContractDTO = require('../model/tradingcontractdto');
 
 class TradingContractDAO {
   constructor() {

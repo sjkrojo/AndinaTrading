@@ -16,7 +16,9 @@ app.use(morgan('dev'))
 app.use(express.json())
 app.use(express.urlencoded({extended: false}));
 
+// routes
 app.use(require("./routes/index"));
+app.use('/api/companies',require("./routes/companies"));
 
 app.use(express.static(path.join(__dirname, 'public')));
 

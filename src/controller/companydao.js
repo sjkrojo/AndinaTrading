@@ -1,7 +1,7 @@
 // dao/CompanyDAO.js
 const { db } = require('../firebase')
-const CompanyDTO = require('../companydto');
-const StockDTO = require('../stockdto');
+const CompanyDTO = require('../model/companydto');
+const StockDTO = require('../model/stockdto');
 const StockDAO = require('./stockdao');
 
 class CompanyDAO {
@@ -10,19 +10,18 @@ class CompanyDAO {
     this.stockDAO = new StockDAO(); // Initialize StockDAO
   }
 
-  // Create a new company with its associated stock
-  async createCompany(companyDTO) {
-    // Create the stock first
-    const stock = await this.stockDAO.createStock(companyDTO.stockDTO);
-    const docRef = await this.collection.add({
-      name: companyDTO.name,
-      country: companyDTO.country,
-      city: companyDTO.city,
-      stockId: stock.id, // Store stock ID in company
-    });
-    return { id: docRef.id, ...companyDTO, stockId: stock.id };
-  }
+// Función para crear una nueva empresa con su stock asociado, recibiendo las variables como argumentos
+async  createCompany(name, country, city, stock) {
+  // Crear la empresa
+  const docRef = await this.collection.add({
+      name,
+      country,
+      city,
+      stockId: stock.id, // Almacena el ID del stock en la empresa
+  });
 
+  return { id: docRef.id, name, country, city, stockId: stock.id };
+}
   // Get all companies with their stock data
   async getCompanies() {
     const snapshot = await this.collection.get();

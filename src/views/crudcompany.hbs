@@ -1,0 +1,38 @@
+ <div class="container mt-5">
+        <h2 class="text-center">Formulario de Empresa y Stock</h2>
+        <form action="/api/companies/createcompany" method="post">
+            <h4>Valores de la Empresa</h4>
+            <div class="mb-3">
+                <label for="name" class="form-label">Nombre de la Empresa</label>
+                <input type="text" class="form-control" id="name" name="company_name" placeholder="Ingrese el nombre de la empresa" required>
+            </div>
+            <div class="mb-3">
+                <label for="country" class="form-label">País</label>
+                <input type="text" class="form-control" id="country" name="company_country" placeholder="Ingrese el país" required>
+            </div>
+            <div class="mb-3">
+                <label for="city" class="form-label">Ciudad</label>
+                <input type="text" class="form-control" id="city" name="company_city" placeholder="Ingrese la ciudad" required>
+            </div>
+            <h4>Valores de Stock</h4>
+            <div class="mb-3">
+                <label for="stockName" class="form-label">Nombre del Producto</label>
+                <input type="text" class="form-control" id="stockName" name="product_name" placeholder="Ingrese el nombre del producto" required>
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Descripción</label>
+                <textarea class="form-control" id="description" name="product_description" rows="3" placeholder="Ingrese la descripción" required></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="value" class="form-label">Valor</label>
+                <input type="number" class="form-control" id="value" name="product_value" placeholder="Ingrese el valor" required>
+            </div>
+            <div class="mb-3">
+                <label for="inStorage" class="form-label">En Almacenamiento</label>
+                <input type="number" class="form-control" id="inStorage" name="product_in_storage" placeholder="Ingrese la cantidad en almacenamiento" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Enviar</button>
+        </form>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+</body>

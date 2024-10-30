@@ -1,6 +1,6 @@
 // dao/SecurityHouseDAO.js
 const { db } = require('../firebase')
-const SecurityHouseDTO = require('../securityHousedto');
+const SecurityHouseDTO = require('../model/securityhousedto');
 const TradingContractDAO = require('./tradingcontractdao');
 
 class SecurityHouseDAO {

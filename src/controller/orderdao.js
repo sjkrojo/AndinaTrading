@@ -1,5 +1,5 @@
 const { db } = require('../firebase'); // Import the Firestore database instance
-const OrderDTO = require('./orderdto'); // Import the OrderDTO
+const OrderDTO = require('../model/orderdto'); // Import the OrderDTO
 
 class OrderDAO {
     constructor() {
