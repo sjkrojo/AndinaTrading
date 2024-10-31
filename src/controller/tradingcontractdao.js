@@ -4,7 +4,7 @@ const TradingContractDTO = require('../model/tradingcontractdto');
 
 class TradingContractDAO {
   constructor() {
-    this.collection = db.collection('tradingContracts');
+    this.collection = db.collection('tradingcontracts');
   }
 
   // Create a new trading contract

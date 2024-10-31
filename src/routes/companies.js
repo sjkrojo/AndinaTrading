@@ -1,5 +1,4 @@
 const { Router } = require('express');
-const { db } = require('../firebase')
 const CompanyDAO = require('../controller/companydao');
 const StockDAO = require('../controller/stockdao');
 
