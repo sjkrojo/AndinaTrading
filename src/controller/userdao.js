@@ -75,6 +75,22 @@ class UserDAO {
     const userData = snapshot.docs[0].data();
     return userData.type; // Return the user's type
   }
+
+    // Get a user by email
+  async getUserByEmail(email) {
+    const snapshot = await this.collection
+      .where('gmail', '==', email)
+      .limit(1) // Limitar a un resultado
+      .get();
+
+    if (snapshot.empty) {
+      return null; // No user found with the given email
+    }
+
+    const doc = snapshot.docs[0];
+    const data = doc.data();
+    return new UserDTO(doc.id, data.gmail, data.password, data.type, data.idtype);
+  }
 }
 
 module.exports = UserDAO;

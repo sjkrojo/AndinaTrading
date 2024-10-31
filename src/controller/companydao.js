@@ -33,6 +33,28 @@ async  createCompany(name, country, city, stock) {
     return companies;
   }
 
+
+  // Function to get a company by its name
+async getCompanyByName(name) {
+  const snapshot = await this.collection.where('name', '==', name).get();
+  if (snapshot.empty) return null;
+
+  const doc = snapshot.docs[0]; // Assuming names are unique, we take the first match
+  const data = doc.data();
+  const stockId = data.stockId;
+
+  // If the company has an associated stock, retrieve it
+  const stock = stockId ? await this.stockDAO.getStockById(stockId) : null;
+
+  return new CompanyDTO(
+      doc.id,
+      data.name,
+      data.country,
+      data.city,
+      stock
+  );
+}
+
   // Get a company by ID with its stock data
   async getCompanyById(id) {
     const doc = await this.collection.doc(id).get();
@@ -43,27 +65,50 @@ async  createCompany(name, country, city, stock) {
     return new CompanyDTO(doc.id, data.name, data.country, data.city, stock);
   }
 
-  // Update a company and its stock
-  async updateCompany(id, updatedData) {
-    const doc = await this.collection.doc(id).get();
-    if (!doc.exists) return null;
+// Update a company and its stock with individual parameters
+async updateCompany(id, name, country, city, stockId, stockName, stockDescription, stockDate, stockValue, stockCompany, stockInStorage) {
+  const doc = await this.collection.doc(id).get();
+  if (!doc.exists) return null;
 
-    // Update company data
-    await this.collection.doc(id).update(updatedData);
+  // Update company data with individual parameters
+  await this.collection.doc(id).update({
+      name,
+      country,
+      city
+  });
 
-    const data = doc.data();
-    const stockId = data.stockId;
-
-    // Update stock data if provided
-    if (updatedData.stock) {
-      await this.stockDAO.updateStock(stockId, updatedData.stock);
-    }
-
-    // Fetch updated data
-    const updatedDoc = await this.collection.doc(id).get();
-    const updatedStock = await this.stockDAO.getStockById(stockId);
-    return new CompanyDTO(updatedDoc.id, updatedDoc.data().name, updatedDoc.data().country, updatedDoc.data().city, updatedStock);
+  // Update stock data if stockId and stock fields are provided
+  if (stockId) {
+      await this.stockDAO.updateStock(
+          stockId,
+          stockName,
+          stockDescription,
+          stockDate,
+          stockValue,
+          stockCompany,
+          stockInStorage
+      );
   }
+
+  // Fetch updated company and stock data
+  const updatedDoc = await this.collection.doc(id).get();
+  const updatedStock = await this.stockDAO.getStockById(stockId);
+
+  return new CompanyDTO(
+      updatedDoc.id,
+      updatedDoc.data().name,
+      updatedDoc.data().country,
+      updatedDoc.data().city,
+      updatedStock
+  );
+}
+
+// Function to check if a company name is already in use
+async isCompanyNameInUse(name) {
+  const snapshot = await this.collection.where('name', '==', name).get();
+  return !snapshot.empty; // Returns true if a document with this name exists
+}
+
 
   // Delete a company and its associated stock
   async deleteCompany(id) {

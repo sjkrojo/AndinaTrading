@@ -11,9 +11,12 @@ router.get('/', async (req, res) => {
     res.render('index')
 })
 
-router.get('/firstmodule', async (req, res) => {
+router.post('/firstmodule/:id', async (req, res) => {
 
-    res.render('firstmodule')
+    const  user = req.params;
+    console.log(user);
+
+    res.render('firstmodule', {user});
 })
 
 router.post('/login', async (req, res) => {
@@ -23,9 +26,10 @@ router.post('/login', async (req, res) => {
     if( isAuthenticated){
 
         const type = await userDAO.getUserTypeByEmail(email);
+        const user = await userDAO.getUserByEmail(email);
 
         if(type === 'admin'){
-            res.render('menuadmin');
+            res.render('menuadmin', {user});
         }
     
     }else{

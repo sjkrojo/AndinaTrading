@@ -3,7 +3,9 @@
         <h3 class="card-title text-center mb-4">Andina Trading - Menú de Módulos</h3>
         
         <!-- Módulo de Parámetros Básicos -->
-        <form action="/api/companies" method="get" class="mb-3">
+
+        <h1>{{user}}</h1>
+        <form action="/api/companies/crud/{{user.id}}" method="post" class="mb-3">
             <button type="submit" class="btn btn-primary w-100">Gestión de Inversionistas</button>
         </form>
         

@@ -75,31 +75,56 @@ async createStock(name, description, date, value, company, amountSold, inStorage
       : null;
   }
 
-  // Update a stock
-  async updateStock(id, stockDTO) {
-    await this.collection.doc(id).update({
-      name: stockDTO.name,
-      description: stockDTO.description,
-      date: stockDTO.date,
-      value: stockDTO.value,
-      company: stockDTO.company,
-      amountSold: stockDTO.amountSold,
-      inStorage: stockDTO.inStorage,
-      historicalData: stockDTO.historicalData,
-    });
-    const doc = await this.collection.doc(id).get();
-    return new StockDTO(
+// Function to check if a stock name is already in use
+async isStockNameInUse(name) {
+  const snapshot = await this.collection.where('name', '==', name).get();
+  return !snapshot.empty; // Returns true if a document with this name exists
+}
+
+
+// Function to get a stock by its name
+async getStockByName(name) {
+  const snapshot = await this.collection.where('name', '==', name).get();
+  if (snapshot.empty) return null;
+
+  const doc = snapshot.docs[0]; // Assuming names are unique, we take the first match
+  const data = doc.data();
+  
+  return new StockDTO(
       doc.id,
-      doc.data().name,
-      doc.data().description,
-      doc.data().date.toDate(),
-      doc.data().value,
-      doc.data().company,
-      doc.data().amountSold,
-      doc.data().inStorage,
-      doc.data().historicalData
-    );
-  }
+      data.name,
+      data.description,
+      data.date.toDate(),
+      data.value,
+      data.company,
+      data.amountSold,
+      data.inStorage,
+      data.historicalData
+  );
+}
+
+ // Update a stock with individual values as parameters
+ async updateStock(id, name, description, date, value, company, inStorage ) {
+  await this.collection.doc(id).update({
+    name,
+    description,
+    date: new Date(date),
+    value: parseFloat(value),
+    company,
+    inStorage: parseInt(inStorage)
+  });
+
+  const doc = await this.collection.doc(id).get();
+  return new StockDTO(
+    doc.id,
+    doc.data().name,
+    doc.data().description,
+    doc.data().date.toDate(),
+    doc.data().value,
+    doc.data().company,
+    doc.data().inStorage
+  );
+}
 
   // Delete a stock
   async deleteStock(id) {
@@ -107,5 +132,7 @@ async createStock(name, description, date, value, company, amountSold, inStorage
     return `Stock with ID ${id} deleted`;
   }
 }
+
+
 
 module.exports = StockDAO;
