@@ -21,6 +21,7 @@ app.use(require("./routes/index"));
 app.use('/api/companies',require("./routes/companies"));
 app.use('/api/countries',require("./routes/countries"));
 app.use('/api/securityhouses',require("./routes/securityhouses"));
+app.use('/api/investors', require("./routes/investor"));
 
 
 app.use(express.static(path.join(__dirname, 'public')));

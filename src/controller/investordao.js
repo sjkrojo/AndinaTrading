@@ -1,82 +1,124 @@
-const { db } = require('../firebase.js');
-const CountryDTO = require('../model//countrydto.js');
+// dao/InvestorDAO.js
+const { db } = require('../firebase');
+const InvestorDTO = require('../model/investordto');
+const UserDAO = require('./userdao');
+const TradingContractDAO = require('./tradingcontractdao');
 
-class CountryDAO {
+class InvestorDAO {
     constructor() {
-        this.collection = db.collection('countries'); // Firestore collection name
+        this.collection = db.collection('investors');
+        this.userDAO = new UserDAO();
+        this.tradingContractDAO = new TradingContractDAO();
     }
 
-    // Method to create a new country
-    async createCountry(countryData) {
-        const { countryName, cityName, economicSituation } = countryData;
+    // Crear un nuevo inversionista
+    async createInvestor({ name, address, phone, investmentCapacity }) {
+        // Calcular riskProfile en función de investmentCapacity
+        const riskProfile = this.calculateRiskProfile(investmentCapacity);
+        
+        // Crear el documento en la base de datos
+        const docRef = await this.collection.add({
+            name,
+            address,
+            phone,
+            email: "nn",
+            investmentCapacity,
+            riskProfile,
+            profitStatus: "nn", 
+            stockList: [], // Inicia vacío
+            contracts: [] // Inicia vacío
+        });
 
-        if (countryName && cityName && economicSituation) {
-            const country = new CountryDTO({ ...countryData });
-            const docRef = await this.collection.add({ ...country });
-            return { id: docRef.id, ...country };
-        } else {
-            throw new Error('All fields are required');
-        }
+        return new InvestorDTO({
+            id: docRef.id,
+            name,
+            address,
+            phone,
+            investmentCapacity,
+            riskProfile,
+            profitStatus: null,
+            stockList: [],
+            contracts: []
+        });
     }
 
-    // Method to get a country by ID
-    async getCountryById(countryId) {
-        if (!countryId) {
-            throw new Error('Country ID is required');
-        }
-
-        const doc = await this.collection.doc(countryId).get();
-        if (!doc.exists) {
-            throw new Error(`Country with ID ${countryId} not found`);
-        }
-        return { id: doc.id, ...doc.data() };
-    }
-
-    // Method to get all countries
-    async getAllCountries() {
+    async getInvestors() {
         const snapshot = await this.collection.get();
-        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        const investors = await Promise.all(snapshot.docs.map(async (doc) => {
+            const data = doc.data();
+            return new InvestorDTO({
+                id: doc.id,
+                ...data,
+            });
+        }));
+        return investors;
+    }
+    
+    
+
+   // Obtener un inversionista por su ID
+async getInvestorById(id) {
+    const doc = await this.collection.doc(id).get();
+    if (!doc.exists) return null;
+
+    const data = doc.data();
+
+    return new InvestorDTO({
+        id: doc.id,
+        name: data.name,
+        address: data.address,
+        phone: data.phone,
+        email: data.email,
+        riskProfile: data.riskProfile,
+        investmentCapacity: data.investmentCapacity,
+        profitStatus: data.profitStatus,
+        stockList: data.stockList, 
+        contracts: data.contracts 
+    });
+}
+
+
+    // Actualizar información de un inversionista
+    async updateInvestor(id, name, address, phone, investmentCapacity) {
+        const doc = await this.collection.doc(id).get();
+        if (!doc.exists) return null;
+
+        const riskProfile = this.calculateRiskProfile(investmentCapacity);
+
+        await this.collection.doc(id).update({
+            name,
+            address,
+            phone,
+            investmentCapacity,
+            riskProfile
+        });
+        const updatedDoc = await this.collection.doc(id).get();
+
+        return new InvestorDTO(
+            updatedDoc.id,
+            updatedDoc.data().name,
+            updatedDoc.data().address,
+            updatedDoc.data().phone,
+            updatedDoc.data().investmentCapacity,
+            updatedDoc.data().riskProfile
+        );
     }
 
-    // Method to update a country by ID
-    async updateCountry(countryId, countryData) {
-        if (!countryId) {
-            throw new Error('Country ID is required');
-        }
+    // Eliminar un inversionista por su ID
+    async deleteInvestor(id) {
+        const doc = await this.collection.doc(id).get();
+        if (!doc.exists) return `Investor with ID ${id} does not exist.`;
 
-        const { countryName, cityName, economicSituation } = countryData;
-
-        if (countryName && cityName && economicSituation) {
-            const docRef = this.collection.doc(countryId);
-            const doc = await docRef.get();
-
-            if (!doc.exists) {
-                throw new Error(`Country with ID ${countryId} not found`);
-            }
-
-            await docRef.update(countryData);
-            return { id: countryId, ...countryData };
-        } else {
-            throw new Error('All fields are required');
-        }
+        await this.collection.doc(id).delete();
+        return `Investor with ID ${id} has been deleted.`;
     }
 
-    // Method to delete a country by ID
-    async deleteCountry(countryId) {
-        if (!countryId) {
-            throw new Error('Country ID is required');
-        }
-
-        const docRef = this.collection.doc(countryId);
-        const doc = await docRef.get();
-
-        if (!doc.exists) {
-            throw new Error(`Country with ID ${countryId} not found`);
-        }
-
-        await docRef.delete();
-        return { message: `Country with ID ${countryId} deleted successfully` };
+    // Calcular el perfil de riesgo en función de la capacidad de inversión
+    calculateRiskProfile(investmentCapacity) {
+        if (investmentCapacity < 10000) return 'Low';
+        else if (investmentCapacity < 50000) return 'Medium';
+        else return 'High';
     }
 }
 
-module.exports = CountryDAO;
+module.exports = InvestorDAO;

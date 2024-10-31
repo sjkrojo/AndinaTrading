@@ -1,0 +1,106 @@
+<div class="container mt-5">
+    <h1 class="text-center">{{data.message}}</h1>
+    <h2 class="text-center">CRUD de Inversionistas</h2>
+
+    <!-- Formulario para eliminar inversionista -->
+    <div class="col-md-4">
+        <h4>Eliminar Inversionista</h4>
+        <form action="/api/investors/deleteinvestor/{{data.user.id}}" method="post">
+            <select class="form-select mb-3" name="eliminar" required>
+                <option selected disabled>Seleccione un inversionista</option>
+                {{#each data.investors}}
+                    <option value="{{id}}">{{name}}</option>
+                {{/each}}
+            </select>
+            <button type="submit" class="btn btn-lg btn-danger">Eliminar</button>
+        </form>
+    </div>
+
+    <!-- Formulario para editar inversionista -->
+<div class="col-md-4">
+    <h4>Editar Inversionista</h4>
+    <form action="/api/investors/editinvestor" method="post">
+        <select class="form-select mb-3" name="idInvestor" id="editInvestorSelect" required>
+            <option selected disabled>Seleccione un inversionista</option>
+            {{#each data.investors}}
+                <option value="{{id}}">{{name}}</option>
+            {{/each}}
+        </select>
+        <button type="submit" class="btn btn-lg btn-warning">Cargar Datos</button>
+    </form>
+</div>
+    <!-- Formulario para mostrar inversionista -->
+    <div class="col-md-4">
+        <h4>Mostrar Inversionista</h4>
+        <form action="/api/investors/showinvestor/{{data.user.id}}" method="post">
+            <select class="form-select mb-3" name="mostrar" required>
+                <option selected disabled>Seleccione un inversionista</option>
+                {{#each data.investors}}
+                    <option value="{{id}}">{{name}}</option>
+                {{/each}}
+            </select>
+            <button type="submit" class="btn btn-lg btn-info">Seleccionar</button>
+        </form>
+    </div>
+
+    <!-- Visualización de inversionista seleccionado -->
+ <div class="col-md-4">
+    <h3>ID: {{data.investorShow.id}}</h3>
+    <h3>Nombre: {{data.investorShow.name}}</h3>
+    <p>Dirección: {{data.investorShow.address}}</p>
+    <p>Teléfono: {{data.investorShow.phone}}</p>
+    <p>Email: {{data.investorShow.email}}</p>
+    <p>Perfil de Riesgo: {{data.investorShow.riskProfile}}</p>
+    <p>Capacidad de Inversión: {{data.investorShow.investmentCapacity}}</p>
+    <p>Estado de Ganancias: 
+        {{#if data.investorShow.profitStatus}}
+            {{data.investorShow.profitStatus}}
+        {{else}}
+            Sin definir
+        {{/if}}
+    </p>
+    <p>Lista de Acciones: {{data.investorShow.stockList}}</p>
+    <p>Contratos: {{data.investorShow.contracts}}</p>
+</div>
+
+
+     <!-- Formulario para crear o actualizar inversionista -->
+    <form action="{{#unless data.investor.id}}/api/investors/createinvestor/{{data.user.id}}{{else}}/api/investors/updateinvestor/id{{data.user.id}}{{/unless}}" method="post">
+        <h4>Valores del Inversionista</h4>
+
+        {{#if data.investor.id}}
+            <div class="mb-3">
+                <label for="id" class="form-label">ID del Inversionista</label>
+                <input type="text" class="form-control" id="id" name="id" value="{{data.investor.id}}" required readonly>
+            </div>
+        {{/if}}
+
+        <div class="mb-3">
+            <label for="name" class="form-label">Nombre</label>
+            <input type="text" class="form-control" id="name" name="name" value="{{data.investor.name}}" placeholder="Ingrese el nombre del inversionista" required>
+        </div>
+        
+        <div class="mb-3">
+            <label for="address" class="form-label">Dirección</label>
+            <input type="text" class="form-control" id="address" name="address" value="{{data.investor.address}}" placeholder="Ingrese la dirección" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="phone" class="form-label">Teléfono</label>
+            <input type="text" class="form-control" id="phone" name="phone" value="{{data.investor.phone}}" placeholder="Ingrese el teléfono" required>
+        </div>
+        
+        <div class="mb-3">
+            <label for="investmentCapacity" class="form-label">Capacidad de Inversión</label>
+            <input type="text" class="form-control" id="investmentCapacity" name="investmentCapacity" value="{{data.investor.investmentCapacity}}" placeholder="Ingrese la capacidad de inversión" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">{{#unless data.investor.id}}Crear{{else}}Actualizar{{/unless}}</button>
+    </form>
+
+    <form action="/firstmodule/{{data.user.id}}" method="POST">
+        <button type="submit" class="btn btn-primary m-2">Volver</button>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
