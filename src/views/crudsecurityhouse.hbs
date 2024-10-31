@@ -1,0 +1,81 @@
+ <div class="container mt-5">
+        <h1 class="text-center">{{data.message}}</h1>
+        <h2 class="text-center">CRUD de Comisionistas de Bolsa</h2>
+
+        <div class="col-md-4">
+            <h4>Comisionistas Disponibles</h4>
+            <form action="/api/securityhouses/deletehouse/{{data.user.id}}" method="post">
+                <select class="form-select mb-3" name="eliminar" required>
+                    <option selected disabled>Seleccione un comisionista</option>
+                    {{#each data.houses}}
+                         <option value="{{id}}">{{name}}</option>
+                    {{/each}}
+                </select>
+                <button type="submit" class="btn btn-lg btn-primary">Eliminar</button>
+            </form>
+        </div>
+        
+        <div class="col-md-4">
+            <h4>Editar Comisionista</h4>
+            <form action="/api/securityhouses/edithouse/{{data.user.id}}" method="post">
+                <select class="form-select mb-3" name="editar" required>
+                    <option selected disabled>Seleccione un comisionista</option>
+                    {{#each data.houses}}
+                         <option value="{{id}}">{{name}}</option>
+                    {{/each}}
+                </select>
+                <button type="submit" class="btn btn-lg btn-primary">Editar</button>
+            </form>
+        </div>
+
+        <div class="col-md-4">
+            <h4>Mostrar Comisionista</h4>
+            <form action="/api/securityhouses/showhouse/{{data.user.id}}" method="post">
+                <select class="form-select mb-3" name="mostrar" required>
+                    <option selected disabled>Seleccione un comisionista</option>
+                    {{#each data.houses}}
+                         <option value="{{id}}">{{name}}</option>
+                    {{/each}}
+                </select>
+                <button type="submit" class="btn btn-lg btn-primary">Seleccionar</button>
+            </form>
+
+        </div>
+        <div class="col-md-4">
+        <h3>{{data.houseshow.id}}</h3>
+        <h3>{{data.houseshow.name}}</h3>
+        <p>{{data.houseshow.location.country}}</p>
+        <p>{{data.houseshow.location.city}}</p>
+        </div>
+
+        <form action="{{#unless data.house.id}}/api/securityhouses/createhouse/{{data.user.id}}{{else}}/api/securityhouses/update/{{data.user.id}}{{/unless}}" method="post">
+            <h4>Valores del Comisionista</h4>
+
+            {{#if data.house.id}}
+                <div class="mb-3">
+                 <label for="name" class="form-label">ID del Comisionista</label>
+                 <input type="text" class="form-control" id="idhouse" name="idhouse" value="{{data.house.id}}" placeholder="" required readonly>
+                </div>
+            {{/if}}
+
+            <div class="mb-3">
+                <label for="name" class="form-label">Nombre de la Empresa</label>
+                <input type="text" class="form-control" id="name" name="house_name" value="{{data.house.name}}" placeholder="Ingrese el nombre de la empresa" required>
+            </div>
+            <div class="mb-3">
+                <label for="country" class="form-label">País</label>
+                <input type="text" class="form-control" id="country" name="house_country" value="{{data.house.location.country}}" placeholder="Ingrese el país" required>
+            </div>
+            <div class="mb-3">
+                <label for="city" class="form-label">Ciudad</label>
+                <input type="text" class="form-control" id="city" name="house_city" value="{{data.house.location.city}}" placeholder="Ingrese la ciudad" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">{{#unless data.house.id}}Crear{{else}}Actualizar{{/unless}}</button>
+        </form>
+
+            <form action="/firstmodule/{{data.user.id}}" method="POST">
+        <button type="submit" class="btn btn-primary m-2">Volver</button>
+    </form>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+</body>

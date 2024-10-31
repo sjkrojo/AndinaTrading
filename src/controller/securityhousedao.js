@@ -3,96 +3,76 @@ const { db } = require('../firebase')
 const SecurityHouseDTO = require('../model/securityhousedto');
 const TradingContractDAO = require('./tradingcontractdao');
 
-class TradingContractDAO {
+class SecurityHouseDAO {
   constructor() {
-    this.collection = db.collection('tradingContracts');
+    this.collection = db.collection('securityHouses');
+    this.tradingContractDAO = new TradingContractDAO(); // Instantiate TradingContractDAO
   }
 
-  // Create a new trading contract with attribute arguments
-  async createTradingContract(stock, expirationDate, terms, isAccepted, securityHouseDTO, investorDTO) {
+  // Create a new security house
+  async createSecurityHouse(name, city, country) {
     const docRef = await this.collection.add({
-      stock,
-      expirationDate: new Date(expirationDate), // Convert to Date object
-      terms,
-      isAccepted,
-      securityHouseDTO,
-      investorDTO,
+      name: name,
+      location: { city: city, country: country }
     });
-
-    const doc = await docRef.get();
-    return new TradingContractDTO(
-      doc.id,
-      doc.data().stock,
-      doc.data().expirationDate.toDate(),
-      doc.data().terms,
-      doc.data().isAccepted,
-      doc.data().securityHouseDTO,
-      doc.data().investorDTO
-    );
+    return {
+      id: docRef.id,
+      name: name,
+      location: { city: city, country: country }
+    };
   }
 
-  // Update an existing trading contract with attribute arguments
-  async updateTradingContract(id, stock, expirationDate, terms, isAccepted, securityHouseDTO, investorDTO) {
+  // Check if a security house name is already in use
+async isNameInUse(name) {
+  const querySnapshot = await this.collection.where('name', '==', name).get();
+  return !querySnapshot.empty; // Returns true if name is found, otherwise false
+}
+
+  // Get all security houses
+  async getSecurityHouses() {
+    const snapshot = await this.collection.get();
+    return snapshot.docs.map(doc => new SecurityHouseDTO(
+      doc.id,
+      doc.data().name,
+      doc.data().location.city,
+      doc.data().location.country
+    ));
+  }
+
+  // Get security house by ID
+  async getSecurityHouseById(id) {
     const doc = await this.collection.doc(id).get();
     if (!doc.exists) return null;
+    const data = doc.data();
 
-    // Update contract data
-    await this.collection.doc(id).update({
-      stock,
-      expirationDate: new Date(expirationDate), // Convert to Date object
-      terms,
-      isAccepted,
-      securityHouseDTO,
-      investorDTO,
-    });
-
-    // Fetch updated data
-    const updatedDoc = await this.collection.doc(id).get();
-    return new TradingContractDTO(
-      updatedDoc.id,
-      updatedDoc.data().stock,
-      updatedDoc.data().expirationDate.toDate(),
-      updatedDoc.data().terms,
-      updatedDoc.data().isAccepted,
-      updatedDoc.data().securityHouseDTO,
-      updatedDoc.data().investorDTO
+    return new SecurityHouseDTO(
+      doc.id,
+      data.name,
+      data.location.city,
+      data.location.country,
     );
   }
 
-  // Get a trading contract by ID
-  async getTradingContractById(id) {
+  // Update a security house
+  async updateSecurityHouse(id, name, city, country) {
+    const updatedData = {
+      name: name,
+      location: { city: city, country: country }
+    };
+    await this.collection.doc(id).update(updatedData);
     const doc = await this.collection.doc(id).get();
-    return doc.exists
-      ? new TradingContractDTO(
-          doc.id,
-          doc.data().stock,
-          doc.data().expirationDate.toDate(),
-          doc.data().terms,
-          doc.data().isAccepted,
-          doc.data().securityHouseDTO,
-          doc.data().investorDTO
-        )
-      : null;
+    return new SecurityHouseDTO(
+      doc.id,
+      doc.data().name,
+      doc.data().location.city,
+      doc.data().location.country
+    );
   }
 
-  // Delete a trading contract by ID
-  async deleteTradingContractById(id) {
-    const doc = await this.collection.doc(id).get();
-    if (!doc.exists) return null; // Return null if the document does not exist
-
+  // Delete a security house
+  async deleteSecurityHouse(id) {
     await this.collection.doc(id).delete();
-    return `Trading contract with ID ${id} deleted`;
-  }
-
-  // Check if the expiration date has passed
-  async hasExpirationDatePassed(id) {
-    const doc = await this.collection.doc(id).get();
-    if (!doc.exists) return null; // Return null if the document does not exist
-
-    const expirationDate = doc.data().expirationDate.toDate(); // Convert Firestore timestamp to JavaScript Date
-    const currentDate = new Date(); // Get the current date
-
-    return expirationDate < currentDate; // Return true if the expiration date has passed, otherwise false
+    return `Security house with ID ${id} has been deleted.`;
   }
 }
 

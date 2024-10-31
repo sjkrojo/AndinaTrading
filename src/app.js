@@ -20,6 +20,7 @@ app.use(express.urlencoded({extended: false}));
 app.use(require("./routes/index"));
 app.use('/api/companies',require("./routes/companies"));
 app.use('/api/countries',require("./routes/countries"));
+app.use('/api/securityhouses',require("./routes/securityhouses"));
 
 
 app.use(express.static(path.join(__dirname, 'public')));
