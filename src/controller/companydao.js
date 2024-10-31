@@ -48,7 +48,6 @@ async getCompanyByName(name) {
 
   return new CompanyDTO(
       doc.id,
-      data.name,
       data.country,
       data.city,
       stock

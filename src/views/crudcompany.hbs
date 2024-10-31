@@ -57,6 +57,14 @@
 
         <form action="{{#unless data.company.id}}/api/companies/createcompany/{{data.user.id}}{{else}}/api/companies/update/{{data.user.id}}{{/unless}}" method="post">
             <h4>Valores de la Empresa</h4>
+
+            {{#if data.company.id}}
+                <div class="mb-3">
+                 <label for="name" class="form-label">ID de la Empresa</label>
+                 <input type="text" class="form-control" id="idcompany" name="idcompany" value="{{data.company.id}}" placeholder="" required readonly>
+                </div>
+            {{/if}}
+
             <div class="mb-3">
                 <label for="name" class="form-label">Nombre de la Empresa</label>
                 <input type="text" class="form-control" id="name" name="company_name" value="{{data.company.name}}" placeholder="Ingrese el nombre de la empresa" required>
@@ -70,6 +78,15 @@
                 <input type="text" class="form-control" id="city" name="company_city" value="{{data.company.city}}" placeholder="Ingrese la ciudad" required>
             </div>
             <h4>Valores de Stock</h4>
+
+            
+            {{#if data.company.id}}
+                <div class="mb-3">
+                 <label for="name" class="form-label">ID de la Accion</label>
+                 <input type="text" class="form-control" id="idstock" name="idstock" value="{{data.company.stockDTO.id}}" placeholder="" required readonly>
+                </div>
+            {{/if}}
+
             <div class="mb-3">
                 <label for="stockName" class="form-label">Nombre del Producto</label>
                 <input type="text" class="form-control" id="stockName" name="product_name" value="{{data.company.stockDTO.name}}" placeholder="Ingrese el nombre del producto" required>
