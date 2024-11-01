@@ -7,36 +7,27 @@ class StockDAO {
     this.collection = db.collection('stocks');
   }
 
-// Función para crear un nuevo stock recibiendo las variables como argumentos
-async createStock(name, description, date, value, company, amountSold, inStorage) {
-  // Puedes inicializar historicalData como un array vacío
-  const historicalData = [];
-
-  const docRef = await this.collection.add({
-      name,
-      description,
-      date: new Date(date), // Convierte la cadena a un objeto Date
-      value: parseFloat(value), // Convierte el valor a número
-      company,
-      amountSold: parseInt(amountSold), // Convierte a número entero
-      inStorage: parseInt(inStorage), // Convierte a número entero
-      historicalData,
+// Método para crear una entrada de stock para un inversor dentro de la subcolección 'stocks'
+async createStockForInvestor(investorId, quantity, originalPrice, actualPrice, stockId, date) {
+  const stockData = new StockInvestorDTO({
+      quantity,
+      originalprice: originalPrice,
+      actualprice: actualPrice,
+      stockid: stockId,
+      date
   });
 
-  const doc = await docRef.get();
-  return new StockDTO(
-      doc.id,
-      doc.data().name,
-      doc.data().description,
-      doc.data().date.toDate(),
-      doc.data().value,
-      doc.data().company,
-      doc.data().amountSold,
-      doc.data().inStorage,
-      doc.data().historicalData
-  );
-}
+  // Verifica que stockData tenga todos los campos necesarios y sin valores undefined
+  if (!stockData.quantity || !stockData.originalprice || !stockData.actualprice || !stockData.stockid || !stockData.date) {
+      throw new Error("Stock data contiene valores undefined o faltantes.");
+  }
 
+  const investorDocRef = this.investorsCollection.doc(investorId); // Referencia al documento del inversor
+  const stockCollectionRef = investorDocRef.collection('stocks'); // Referencia a la subcolección 'stocks'
+  
+  const docRef = await stockCollectionRef.add({ ...stockData });
+  return { id: docRef.id, ...stockData };
+}
 
   // Get all stocks
   async getStocks() {

@@ -15,13 +15,13 @@
                         Select Trading Contract
                     </div>
                     <div class="card-body">
-                        <form action="/api/select-trading-contract" method="POST">
+                        <form action="/api/fithmodule/select/{{data.user.id}}" method="POST">
                             <div class="mb-3">
-                                <label for="tradingContracts" class="form-label">Choose a Trading Contract</label>
+                                <label for="tradingContracts" class="form-label">Elige un trato de negociacion</label>
                                 <select class="form-select" id="tradingContracts" name="contract" required>
-                                    <option selected disabled>Select a contract</option>
-                                    {{#each tradingContracts}}
-                                        <option value="{{this.id}}">{{this.name}} - {{this.description}} (Value: ${{this.value}})</option>
+                                    <option selected disabled>Selecciona una contrato</option>
+                                    {{#each data.tradingcontracts}}
+                                        <option value="{{id}}">{{expirationDate}} - {{type}} (Cantidad: {{amount}})</option>
                                     {{/each}}
                                 </select>
                             </div>
@@ -38,13 +38,13 @@
                         Trading Contracts History
                     </div>
                     <div class="card-body">
-                        <form action="/api/select-history-contract" method="POST">
+                        <form action="/api/fithmodule/selecthistory/{{data.user.id}}" method="POST">
                             <div class="mb-3">
                                 <label for="historyContracts" class="form-label">Select Contract from History</label>
-                                <select class="form-select" id="historyContracts" name="historyContract" required>
+                                <select class="form-select" id="historyContracts" name="historycon" required>
                                     <option selected disabled>Select a contract</option>
-                                    {{#each historyContracts}}
-                                        <option value="{{this.id}}">{{this.name}} - {{this.status}}</option>
+                                    {{#each data.historyContracts}}
+                                        <option value="{{id}}">{{expirationDate}} - {{type}} (Cantidad: {{amount}}) - {{isAccepted}} </option>
                                     {{/each}}
                                 </select>
                             </div>
@@ -54,6 +54,7 @@
                 </div>
             </div>
 
+        {{#if data.selectedContract}}
             <!-- Panel for Information about Selected Trading Contract -->
             <div class="col mb-4">
                 <div class="card shadow">
@@ -61,24 +62,44 @@
                         Contract Information
                     </div>
                     <div class="card-body">
-                        <form action="/api/accept-deny-contract" method="POST">
-                            <input type="hidden" name="contractId" value="{{selectedContract.id}}">
-                            <p><strong>Contract Name:</strong> {{selectedContract.name}}</p>
-                            <p><strong>Description:</strong> {{selectedContract.description}}</p>
-                            <p><strong>Value:</strong> ${{selectedContract.value}}</p>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="decision" id="accept" value="accept" required>
-                                <label class="form-check-label" for="accept">Accept</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="decision" id="deny" value="deny" required>
-                                <label class="form-check-label" for="deny">Deny</label>
-                            </div>
+                        <form action="/api/fithmodule/confirm/{{data.user.id}}" method="POST">
+                            <input type="hidden" name="contractId" value="{{data.selectedContract.id}}">
+                            <p><strong>Contract Name:</strong> {{data.selectedContract.name}}</p>
+                            <p><strong>Description:</strong> {{data.selectedContract.expirationDate}}</p>
+                            <input type="hidden" name="stockid" value="{{data.selectedContract.stock}}">
+                            <input type="hidden" name="amount" value="{{data.selectedContract.amount}}">
+                            <input type="hidden" name="investorid" value="{{data.selectedContract.investorDTO.id}}">
+
+                                <select class="form-select" id="action" name="action" required>
+                                    <option selected disabled>Selecciona tu decision</option>
+                                    <option value="accept">Aceptar</option>
+                                    <option value="deny">Denegar</option>
+                                </select>
                             <button type="submit" class="btn btn-lg btn-primary w-100 mt-2">Submit Decision</button>
                         </form>
                     </div>
                 </div>
             </div>
+        {{/if}}
+
+        {{#if data.historyContract}}
+            <!-- Panel for Information about Selected Trading Contract -->
+            <div class="col mb-4">
+                <div class="card shadow">
+                    <div class="card-header bg-warning text-white text-center">
+                        Contract Information
+                    </div>
+                    <div class="card-body">
+                            <input type="hidden" name="contractId" value="{{data.historyContract.id}}">
+                            <p><strong>Contract Name:</strong> {{data.historyContract.name}}</p>
+                            <p><strong>Description:</strong> {{data.historyContract.expirationDate}}</p>
+                            <input type="hidden" name="stockid" value="{{data.historyContract.stock}}">
+                            <input type="hidden" name="amount" value="{{data.historyContract.amount}}">
+                            <input type="hidden" name="investorid" value="{{data.historyContract.investorDTO.id}}">
+                    </div>
+                </div>
+            </div>
+        {{/if}}
         </div>
     </div>
 

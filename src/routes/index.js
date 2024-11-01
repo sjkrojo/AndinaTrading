@@ -43,7 +43,19 @@ router.post('/backtomenu/:id', async (req, res) => {
     if (typeuser === 'admin') {
         res.render('menuadmin', { user });
     } else if (typeuser === 'securityhouse') {
-        res.render('fithmodule', { user });
+
+        const tradingcontractsexpired = await tradingContractDAO.checkAndMoveExpiredContracts(user.idtype);
+        const tradingcontracts = await tradingContractDAO.getContractsBySecurityHouseId(user.idtype);
+        const historyContracts = await tradingContractDAO.getAllTradingContractsHistory()
+        const data = {
+            user: user,
+            historyContracts: historyContracts,
+            tradingcontracts: tradingcontracts
+        }
+
+        res.render('fithmodule', { data });
+
+
     } else if (typeuser === 'investor') {
         res.render('fourthmodule', { user });
     } else {
@@ -81,11 +93,16 @@ router.post('/login', async (req, res) => {
 
         if(type === 'securityhouse'){
 
-            const tradindgcontracts = await tradingContractDAO.getContractsBySecurityHouseId(user.idtype);
-            console.log(tradindgcontracts);
+            const tradingcontractsexpired = await tradingContractDAO.checkAndMoveExpiredContracts(user.idtype);
+            const tradingcontracts = await tradingContractDAO.getContractsBySecurityHouseId(user.idtype);
+            const historyContracts = await tradingContractDAO.getAllTradingContractsHistory()
+            const data = {
+                user: user,
+                historyContracts: historyContracts,
+                tradingcontracts: tradingcontracts
+            }
 
-
-            res.render('fithmodule', {user});
+            res.render('fithmodule', { data });
         }
 
         if(type === 'investor'){

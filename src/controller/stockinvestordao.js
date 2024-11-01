@@ -7,22 +7,24 @@ class StockInvestorDAO {
         this.investorsCollection = db.collection('investors'); // Main collection for investors
     }
 
-    // Method to create a stock entry for an investor inside the 'stocks' subcollection
-    async createStockForInvestor(investorId, quantity, originalPrice, actualPrice, stockId, date) {
-        const stockData = new StockInvestorDTO({
-            quantity,
-            originalprice: originalPrice,
-            actualprice: actualPrice,
-            stockid: stockId,
-            date
-        });
+// Method to create a stock entry for an investor inside the 'stocks' subcollection
+async createStockForInvestor(investorId, quantity, originalPrice, actualPrice, stockId, date) {
+    const investorDocRef = this.investorsCollection.doc(investorId); // Reference to the investor document
+    const stockCollectionRef = investorDocRef.collection('stocks'); // Reference to the 'stocks' subcollection
 
-        const investorDocRef = this.investorsCollection.doc(investorId); // Reference to the investor document
-        const stockCollectionRef = investorDocRef.collection('stocks'); // Reference to the 'stocks' subcollection
-        
-        const docRef = await stockCollectionRef.add({ ...stockData });
-        return { id: docRef.id, ...stockData };
-    }
+    // Create a new stock entry
+    const docRef = await stockCollectionRef.add({
+        quantity,
+        originalPrice, // Use camelCase for consistency
+        actualPrice,   // Use camelCase for consistency
+        stockId,       // Use camelCase for consistency
+        date
+    });
+
+    // Return the new stock data along with the document ID
+    return { id: docRef.id, quantity, originalPrice, actualPrice, stockId, date };
+}
+
 
     // Method to get a stock by its ID within the 'stocks' subcollection of a specific investor
     async getStockById(investorId, stockId) {
@@ -50,7 +52,7 @@ class StockInvestorDAO {
     }
 
     // Method to update a stock entry in the 'stocks' subcollection for an investor
-    async updateStockForInvestor(investorId, stockId, quantity, originalPrice, actualPrice, stockId, date) {
+    async updateStockForInvestor(investorId, stId, quantity, originalPrice, actualPrice, stockId, date) {
         const stockData = {
             quantity,
             originalprice: originalPrice,
