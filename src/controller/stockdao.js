@@ -1,138 +1,83 @@
-// dao/StockDAO.js
-const { db } = require('../firebase')
-const StockDTO = require('../model/stockdto');
+// dao/StockInvestorDAO.js
+const { db } = require('../firebase');
+const StockInvestorDTO = require('../model/stockinvestordto');
 
-class StockDAO {
-  constructor() {
-    this.collection = db.collection('stocks');
-  }
+class StockInvestorDAO {
+    constructor() {
+        this.investorsCollection = db.collection('investors'); // Main collection for investors
+    }
 
-// Función para crear un nuevo stock recibiendo las variables como argumentos
-async createStock(name, description, date, value, company, amountSold, inStorage) {
-  // Puedes inicializar historicalData como un array vacío
-  const historicalData = [];
+    // Method to create a stock entry for an investor inside the 'stocks' subcollection
+    async createStockForInvestor(investorId, quantity, originalPrice, actualPrice, stockId, date) {
+        const stockData = new StockInvestorDTO({
+            quantity,
+            originalprice: originalPrice,
+            actualprice: actualPrice,
+            stockid: stockId,
+            date
+        });
 
-  const docRef = await this.collection.add({
-      name,
-      description,
-      date: new Date(date), // Convierte la cadena a un objeto Date
-      value: parseFloat(value), // Convierte el valor a número
-      company,
-      amountSold: parseInt(amountSold), // Convierte a número entero
-      inStorage: parseInt(inStorage), // Convierte a número entero
-      historicalData,
-  });
+        const investorDocRef = this.investorsCollection.doc(investorId); // Reference to the investor document
+        const stockCollectionRef = investorDocRef.collection('stocks'); // Reference to the 'stocks' subcollection
+        
+        const docRef = await stockCollectionRef.add({ ...stockData });
+        return { id: docRef.id, ...stockData };
+    }
 
-  const doc = await docRef.get();
-  return new StockDTO(
-      doc.id,
-      doc.data().name,
-      doc.data().description,
-      doc.data().date.toDate(),
-      doc.data().value,
-      doc.data().company,
-      doc.data().amountSold,
-      doc.data().inStorage,
-      doc.data().historicalData
-  );
+    // Method to get a stock by its ID within the 'stocks' subcollection of a specific investor
+    async getStockById(investorId, stockId) {
+        const stockDoc = await this.investorsCollection
+            .doc(investorId)
+            .collection('stocks')
+            .doc(stockId)
+            .get();
+        
+        if (!stockDoc.exists) {
+            throw new Error(`Stock with ID ${stockId} not found for investor ${investorId}`);
+        }
+
+        return { id: stockDoc.id, ...stockDoc.data() };
+    }
+
+    // Method to get all stocks for a specific investor
+    async getAllStocksForInvestor(investorId) {
+        const snapshot = await this.investorsCollection
+            .doc(investorId)
+            .collection('stocks')
+            .get();
+        
+        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    }
+
+    // Method to update a stock entry in the 'stocks' subcollection for an investor
+    async updateStockForInvestor(investorId, stockId, quantity, originalPrice, actualPrice, stockId, date) {
+        const stockData = {
+            quantity,
+            originalprice: originalPrice,
+            actualprice: actualPrice,
+            stockid: stockId,
+            date
+        };
+
+        const stockDocRef = this.investorsCollection
+            .doc(investorId)
+            .collection('stocks')
+            .doc(stockId);
+        
+        await stockDocRef.update(stockData);
+        return { id: stockId, ...stockData };
+    }
+
+    // Method to delete a stock entry from the 'stocks' subcollection for an investor
+    async deleteStockForInvestor(investorId, stockId) {
+        await this.investorsCollection
+            .doc(investorId)
+            .collection('stocks')
+            .doc(stockId)
+            .delete();
+        
+        return { message: `Stock with ID ${stockId} for investor ${investorId} has been deleted.` };
+    }
 }
 
-
-  // Get all stocks
-  async getStocks() {
-    const snapshot = await this.collection.get();
-    return snapshot.docs.map(
-      (doc) =>
-        new StockDTO(
-          doc.id,
-          doc.data().name,
-          doc.data().description,
-          doc.data().date.toDate(),
-          doc.data().value,
-          doc.data().company,
-          doc.data().amountSold,
-          doc.data().inStorage,
-          doc.data().historicalData
-        )
-    );
-  }
-
-  // Get a stock by ID
-  async getStockById(id) {
-    const doc = await this.collection.doc(id).get();
-    return doc.exists
-      ? new StockDTO(
-          doc.id,
-          doc.data().name,
-          doc.data().description,
-          doc.data().date.toDate(),
-          doc.data().value,
-          doc.data().company,
-          doc.data().amountSold,
-          doc.data().inStorage,
-          doc.data().historicalData
-        )
-      : null;
-  }
-
-// Function to check if a stock name is already in use
-async isStockNameInUse(name) {
-  const snapshot = await this.collection.where('name', '==', name).get();
-  return !snapshot.empty; // Returns true if a document with this name exists
-}
-
-
-// Function to get a stock by its name
-async getStockByName(name) {
-  const snapshot = await this.collection.where('name', '==', name).get();
-  if (snapshot.empty) return null;
-
-  const doc = snapshot.docs[0]; // Assuming names are unique, we take the first match
-  const data = doc.data();
-  
-  return new StockDTO(
-      doc.id,
-      data.name,
-      data.description,
-      data.date.toDate(),
-      data.value,
-      data.company,
-      data.amountSold,
-      data.inStorage,
-      data.historicalData
-  );
-}
-
- // Update a stock with individual values as parameters
- async updateStock(id, name, description, date, value, company, inStorage ) {
-  await this.collection.doc(id).update({
-    name,
-    description,
-    date: new Date(date),
-    value: parseFloat(value),
-    company,
-    inStorage: parseInt(inStorage)
-  });
-
-  const doc = await this.collection.doc(id).get();
-  return new StockDTO(
-    doc.id,
-    doc.data().name,
-    doc.data().description,
-    doc.data().date.toDate(),
-    doc.data().value,
-    doc.data().company,
-    doc.data().inStorage
-  );
-}
-
-  // Delete a stock
-  async deleteStock(id) {
-    await this.collection.doc(id).delete();
-    return `Stock with ID ${id} deleted`;
-  }
-}
-
-
-
-module.exports = StockDAO;
+module.exports = StockInvestorDAO;
