@@ -5,7 +5,7 @@ const router = Router();
 const investorDAO = new InvestorDAO();
 
 router.post('/crud/:id', async (req, res) => {
-    const user = req.body.user; 
+    const user = req.params;
 
     const investors = await investorDAO.getInvestors();
 
@@ -17,7 +17,7 @@ router.post('/crud/:id', async (req, res) => {
     res.render('crudinvestor', { data });
 });
 
-router.post('/deleteinvestor', async (req, res) => {
+router.post('/deleteinvestor/:id', async (req, res) => {
     const user = req.params;
     const { eliminar } = req.body;
 
@@ -32,7 +32,7 @@ router.post('/deleteinvestor', async (req, res) => {
 });
 
 
-router.post('/showinvestor', async (req, res) => {
+router.post('/showinvestor/:id', async (req, res) => {
     const user = req.params;
     const { mostrar } = req.body;
 
@@ -49,7 +49,7 @@ router.post('/showinvestor', async (req, res) => {
 
 
 // Ruta para editar un inversionista
-router.post('/editinvestor', async (req, res) => {
+router.post('/editinvestor/:id', async (req, res) => {
     const user = req.params; // Obtiene los parámetros del usuario
     const { idInvestor } = req.body; // ID del inversionista a editar
 
@@ -68,7 +68,7 @@ router.post('/editinvestor', async (req, res) => {
 
 
 
-router.post('/updateinvestor/id', async (req, res) => {
+router.post('/updateinvestor/:id', async (req, res) => {
     
     const user = req.params; 
     const {id, name, address, phone, investmentCapacity } = req.body;
@@ -91,7 +91,7 @@ router.post('/updateinvestor/id', async (req, res) => {
   
 });
 
-router.post('/createinvestor', async (req, res) => {
+router.post('/createinvestor/:id', async (req, res) => {
     const { name, address, phone, investmentCapacity } = req.body;
 
         const newInvestor = await investorDAO.createInvestor({

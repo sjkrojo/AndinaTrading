@@ -19,7 +19,7 @@
     <!-- Formulario para editar inversionista -->
 <div class="col-md-4">
     <h4>Editar Inversionista</h4>
-    <form action="/api/investors/editinvestor" method="post">
+    <form action="/api/investors/editinvestor/{{data.user.id}}" method="post">
         <select class="form-select mb-3" name="idInvestor" id="editInvestorSelect" required>
             <option selected disabled>Seleccione un inversionista</option>
             {{#each data.investors}}
@@ -65,7 +65,7 @@
 
 
      <!-- Formulario para crear o actualizar inversionista -->
-    <form action="{{#unless data.investor.id}}/api/investors/createinvestor/{{data.user.id}}{{else}}/api/investors/updateinvestor/id{{data.user.id}}{{/unless}}" method="post">
+    <form action="{{#unless data.investor.id}}/api/investors/createinvestor/{{data.user.id}}{{else}}/api/investors/updateinvestor/{{data.user.id}}{{/unless}}" method="post">
         <h4>Valores del Inversionista</h4>
 
         {{#if data.investor.id}}

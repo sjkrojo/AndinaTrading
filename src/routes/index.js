@@ -14,9 +14,15 @@ router.get('/', async (req, res) => {
 router.post('/firstmodule/:id', async (req, res) => {
 
     const  user = req.params;
-    console.log(user);
 
     res.render('firstmodule', {user});
+})
+
+router.post('/menuadmin/:id', async (req, res) => {
+
+    const  user = req.params;
+
+    res.render('menuadmin', {user});
 })
 
 router.post('/login', async (req, res) => {
