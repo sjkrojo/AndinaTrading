@@ -37,6 +37,14 @@ router.post('/login', async (req, res) => {
         if(type === 'admin'){
             res.render('menuadmin', {user});
         }
+
+        if(type === 'securityhouse'){
+            res.render('fithmodule', {user});
+        }
+
+        if(type === 'investor'){
+            res.render('fourthmodule', {user});
+        }
     
     }else{
 

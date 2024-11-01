@@ -1,0 +1,78 @@
+<body class="bg-light">
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">Portal de Inversionista</h2>
+
+        <!-- Panel for Buy/Sell Orders -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white text-center">
+                Órdenes de Compra y Venta
+            </div>
+            <div class="card-body">
+                <form action="/api/orders" method="POST">
+                    <div class="mb-3">
+                        <label for="stock" class="form-label">Selecciona una Acción</label>
+                        <select class="form-select" id="stock" name="stock" required>
+                            <option selected disabled>Selecciona una acción</option>
+                            <option value="AAPL">Apple Inc. (AAPL)</option>
+                            <option value="GOOGL">Alphabet Inc. (GOOGL)</option>
+                            <option value="AMZN">Amazon.com Inc. (AMZN)</option>
+                            <option value="MSFT">Microsoft Corp. (MSFT)</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="orderType" class="form-label">Tipo de Orden</label>
+                        <select class="form-select" id="orderType" name="orderType" required>
+                            <option selected disabled>Selecciona el tipo de orden</option>
+                            <option value="buy" disabled>Compra</option>
+                            <option value="sell">Venta</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="quantity" class="form-label">Cantidad</label>
+                        <input type="number" class="form-control" id="quantity" name="quantity" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Enviar Orden</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Panel for Gains Status -->
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white text-center">
+                Estado de Ganancias
+            </div>
+            <div class="card-body">
+                <p><strong>Ganancias Totales:</strong> $<span id="totalGains">0.00</span></p>
+                <p><strong>Acciones en Cartera:</strong></p>
+                <ul id="portfolio" class="list-group">
+                    <li class="list-group-item">AAPL: 10 acciones ($100.00)</li>
+                    <li class="list-group-item">GOOGL: 5 acciones ($50.00)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Panel for Stock Price Evolution -->
+        <div class="card">
+            <div class="card-header bg-warning text-white text-center">
+                Evolución del Valor de la Acción (Últimos 5 Días)
+            </div>
+            <div class="card-body">
+                <div id="stockPriceChart" style="height: 300px;"></div>
+                <!-- Example placeholder for chart; replace with chart library code -->
+                <p class="text-center">Gráfico de evolución de precios irá aquí</p>
+            </div>
+        </div>
+
+        <!-- Logout and View Stock Market Buttons -->
+        <div class="text-center mt-4">
+            <form action="/api/secondmodule/module/{{user.id}}" method="post" class="mb-3">
+                <button type="submit" class="btn btn-info w-100">Ver Bolsa de Valores</button>
+            </form>
+            <a href="/" class="btn btn-secondary w-100">Back</a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Placeholder JavaScript for handling chart generation and data fetching can be added here
+    </script>
