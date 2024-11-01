@@ -4,7 +4,6 @@ class InvestorDTO {
         name,
         address,
         phone,
-        email,
         riskProfile,
         investmentCapacity,
         profitStatus,
@@ -15,7 +14,6 @@ class InvestorDTO {
         this.name = name;                       
         this.address = address;                
         this.phone = phone;                    
-        this.email = email;                    
         this.riskProfile = riskProfile;        
         this.investmentCapacity = investmentCapacity; 
         this.profitStatus = profitStatus;

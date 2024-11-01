@@ -10,6 +10,11 @@
         <form action="/api/secondmodule/module/{{user.id}}" method="post" class="mb-3">
             <button type="submit" class="btn btn-secondary w-100">2. Conexión con la Bolsa de Valores</button>
         </form>
+
+               <!-- Módulo de Generación de Contratos -->
+         <form action="/api/contractCreat/crud/{{user.id}}" method="post" class="mb-3">
+             <button type="submit" class="btn btn-success w-100">3. Generación de Contratos</button>
+        </form>
         
         <!-- Módulo de Consolidación de Información -->
         <form action="/consolidacionInformacion" method="post" class="mb-3">
