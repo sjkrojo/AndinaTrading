@@ -24,7 +24,6 @@ async createInvestor({ name, address, phone, investmentCapacity }) {
         investmentCapacity,
         riskProfile,
         profitStatus: "nn", 
-        stockList: [], // Inicia vacío
         contracts: [] // Inicia vacío
     });
 
@@ -91,8 +90,8 @@ async getInvestorById(id) {
 
     // Calcular el perfil de riesgo en función de la capacidad de inversión
     calculateRiskProfile(investmentCapacity) {
-        if (investmentCapacity < 10000) return 'Low';
-        else if (investmentCapacity < 50000) return 'Medium';
+        if (investmentCapacity < 80) return 'Low';
+        else if (investmentCapacity < 150) return 'Medium';
         else return 'High';
     }
 }

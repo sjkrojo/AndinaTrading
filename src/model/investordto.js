@@ -7,7 +7,6 @@ class InvestorDTO {
         riskProfile,
         investmentCapacity,
         profitStatus,
-        stockList = [],
         contracts = [],
     }) {
         this.id = id;                        
@@ -17,7 +16,6 @@ class InvestorDTO {
         this.riskProfile = riskProfile;        
         this.investmentCapacity = investmentCapacity; 
         this.profitStatus = profitStatus;
-        this.stockList = stockList;            
         this.contracts = contracts;                      
     }
 }
