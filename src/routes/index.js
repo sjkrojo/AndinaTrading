@@ -1,11 +1,15 @@
 const { Router } = require('express');
 const { db } = require('../firebase')
 const UserDAO = require('../controller/userdao');
+const InvestorDAO = require('../controller/investordao');
+const TradingContractDAO = require('../controller/tradingcontractdao');
 const CountryDAO = require('../controller/countrydao');
 
 const router = Router();
 const userDAO = new UserDAO();
 const countryDAO = new CountryDAO();
+const investorDAO = new InvestorDAO();
+const tradingContractDAO = new TradingContractDAO();
 
 router.get('/', async (req, res) => {
 
@@ -76,6 +80,11 @@ router.post('/login', async (req, res) => {
         }
 
         if(type === 'securityhouse'){
+
+            const tradindgcontracts = await tradingContractDAO.getContractsBySecurityHouseId(user.idtype);
+            console.log(tradindgcontracts);
+
+
             res.render('fithmodule', {user});
         }
 

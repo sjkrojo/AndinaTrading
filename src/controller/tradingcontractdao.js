@@ -94,6 +94,24 @@ class TradingContractDAO {
     return `Trading contract with ID ${id} deleted`;
   }
 
+    // Get all trading contracts by security house ID
+    async getContractsBySecurityHouseId(securityHouseId) {
+      const snapshot = await this.collection.where('securityHouseDTO.id', '==', securityHouseId).get();
+      if (snapshot.empty) return []; // Return empty array if no contracts found
+
+      return snapshot.docs.map(doc => new TradingContractDTO(
+          doc.id,
+          doc.data().stock,
+          doc.data().expirationDate.toDate(),
+          doc.data().terms,
+          doc.data().isAccepted,
+          doc.data().amount,
+          doc.data().type,
+          doc.data().securityHouseDTO,
+          doc.data().investorDTO
+      ));
+  }
+
     // Check if the expiration date has passed
     async hasExpirationDatePassed(id) {
       const doc = await this.collection.doc(id).get();
