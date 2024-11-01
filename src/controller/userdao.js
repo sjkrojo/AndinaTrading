@@ -37,13 +37,21 @@ async createUser(gmail, password, type, idtype) {
     ));
   }
 
-  // Get a user by ID
-  async getUserById(id) {
-    const doc = await this.collection.doc(id).get();
-    if (!doc.exists) return null;
-    const data = doc.data();
-    return new UserDTO(doc.id, data.gmail, data.password, data.type, data.idtype);
-  }
+ // Get a user by ID
+async getUserById(id) {
+  const doc = await this.collection.doc(id).get();
+  if (!doc.exists) return null;
+  const data = doc.data();
+  
+  // Devolver el ID junto con otros datos
+  return {
+    id: doc.id, // Agrega el ID aquí
+    gmail: data.gmail,
+    password: data.password,
+    type: data.type,
+    idtype: data.idtype
+  };
+}
 
 // Update a user
 async updateUser(id, gmail, password, type, idtype) {

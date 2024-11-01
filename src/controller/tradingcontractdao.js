@@ -8,12 +8,14 @@ class TradingContractDAO {
   }
 
   // Create a new trading contract
-  async createTradingContract(stock, expirationDate, terms, isAccepted, securityHouseDTO, investorDTO) {
+  async createTradingContract(stock, expirationDate, terms, isAccepted,amount,type, securityHouseDTO, investorDTO) {
     const docRef = await this.collection.add({
       stock,
       expirationDate: new Date(expirationDate), // Convert to Date object
       terms,
       isAccepted,
+      amount,
+      type,
       securityHouseDTO,
       investorDTO,
     });
@@ -25,13 +27,15 @@ class TradingContractDAO {
       doc.data().expirationDate.toDate(),
       doc.data().terms,
       doc.data().isAccepted,
+      doc.data().amount,
+      doc.data().type,
       doc.data().securityHouseDTO,
       doc.data().investorDTO
     );
   }
 
   // Update an existing trading contract
-  async updateTradingContract(id, stock, expirationDate, terms, isAccepted, securityHouseDTO, investorDTO) {
+  async updateTradingContract(id, stock, expirationDate, terms, isAccepted, amount,type,securityHouseDTO, investorDTO) {
     const doc = await this.collection.doc(id).get();
     if (!doc.exists) return null;
 
@@ -41,6 +45,8 @@ class TradingContractDAO {
       expirationDate: new Date(expirationDate),
       terms,
       isAccepted,
+      amount,
+      type,
       securityHouseDTO,
       investorDTO,
     });
@@ -53,6 +59,8 @@ class TradingContractDAO {
       updatedDoc.data().expirationDate.toDate(),
       updatedDoc.data().terms,
       updatedDoc.data().isAccepted,
+      updatedDoc.data().amount,
+      updatedDoc.data().type,
       updatedDoc.data().securityHouseDTO,
       updatedDoc.data().investorDTO
     );
@@ -69,6 +77,8 @@ class TradingContractDAO {
           doc.data().expirationDate.toDate(),
           doc.data().terms,
           doc.data().isAccepted,
+          doc.data().amount,
+          doc.data().type,
           doc.data().securityHouseDTO,
           doc.data().investorDTO
         )

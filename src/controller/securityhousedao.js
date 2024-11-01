@@ -43,14 +43,8 @@ async isNameInUse(name) {
   async getSecurityHouseById(id) {
     const doc = await this.collection.doc(id).get();
     if (!doc.exists) return null;
-    const data = doc.data();
+    return { id: doc.id, ...doc.data() };
 
-    return new SecurityHouseDTO(
-      doc.id,
-      data.name,
-      data.location.city,
-      data.location.country,
-    );
   }
 
   // Update a security house
@@ -61,12 +55,8 @@ async isNameInUse(name) {
     };
     await this.collection.doc(id).update(updatedData);
     const doc = await this.collection.doc(id).get();
-    return new SecurityHouseDTO(
-      doc.id,
-      doc.data().name,
-      doc.data().location.city,
-      doc.data().location.country
-    );
+    return { id: doc.id, ...doc.data() };
+
   }
 
   // Delete a security house

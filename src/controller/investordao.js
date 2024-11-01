@@ -11,35 +11,29 @@ class InvestorDAO {
         this.tradingContractDAO = new TradingContractDAO();
     }
 
-    // Crear un nuevo inversionista
-    async createInvestor({ name, address, phone, investmentCapacity }) {
-        // Calcular riskProfile en función de investmentCapacity
-        const riskProfile = this.calculateRiskProfile(investmentCapacity);
-        
-        // Crear el documento en la base de datos
-        const docRef = await this.collection.add({
-            name,
-            address,
-            phone,
-            investmentCapacity,
-            riskProfile,
-            profitStatus: "nn", 
-            stockList: [], // Inicia vacío
-            contracts: [] // Inicia vacío
-        });
+// Crear un nuevo inversionista
+async createInvestor({ name, address, phone, investmentCapacity }) {
+    // Calcular riskProfile en función de investmentCapacity
+    const riskProfile = this.calculateRiskProfile(investmentCapacity);
+    
+    // Crear el documento en la base de datos
+    const docRef = await this.collection.add({
+        name,
+        address,
+        phone,
+        investmentCapacity,
+        riskProfile,
+        profitStatus: "nn", 
+        stockList: [], // Inicia vacío
+        contracts: [] // Inicia vacío
+    });
 
-        return new InvestorDTO({
-            id: docRef.id,
-            name,
-            address,
-            phone,
-            investmentCapacity,
-            riskProfile,
-            profitStatus: null,
-            stockList: [],
-            contracts: []
-        });
-    }
+    // Obtener los datos del documento recién creado
+    const docSnapshot = await docRef.get();
+
+    return { id: docRef.id, ...docSnapshot.data() };
+}
+
 
     async getInvestors() {
         const snapshot = await this.collection.get();
@@ -60,19 +54,8 @@ async getInvestorById(id) {
     const doc = await this.collection.doc(id).get();
     if (!doc.exists) return null;
 
-    const data = doc.data();
+    return { id: doc.id, ...doc.data() };
 
-    return new InvestorDTO({
-        id: doc.id,
-        name: data.name,
-        address: data.address,
-        phone: data.phone,
-        riskProfile: data.riskProfile,
-        investmentCapacity: data.investmentCapacity,
-        profitStatus: data.profitStatus,
-        stockList: data.stockList, 
-        contracts: data.contracts 
-    });
 }
 
 
@@ -90,16 +73,11 @@ async getInvestorById(id) {
             investmentCapacity,
             riskProfile
         });
+        
         const updatedDoc = await this.collection.doc(id).get();
 
-        return new InvestorDTO(
-            updatedDoc.id,
-            updatedDoc.data().name,
-            updatedDoc.data().address,
-            updatedDoc.data().phone,
-            updatedDoc.data().investmentCapacity,
-            updatedDoc.data().riskProfile
-        );
+        return { id: doc.id, ...doc.data() };
+
     }
 
     // Eliminar un inversionista por su ID
