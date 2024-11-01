@@ -8,16 +8,22 @@ class UserDAO {
     this.collection = db.collection('users'); // Firestore collection for users
   }
 
-  // Create a new user
-  async createUser(userDTO) {
-    const docRef = await this.collection.add({
-      gmail: userDTO.gmail,
-      password: userDTO.password,
-      type: userDTO.type,
-      idtype: userDTO.idtype
-    });
-    return { id: docRef.id, ...userDTO };
-  }
+// Create a new user
+async createUser(gmail, password, type, idtype) {
+  const docRef = await this.collection.add({
+    gmail: gmail,
+    password: password,
+    type: type,
+    idtype: idtype
+  });
+  return {
+    id: docRef.id,
+    gmail: gmail,
+    password: password,
+    type: type,
+    idtype: idtype
+  };
+}
 
   // Get all users
   async getUsers() {
@@ -39,12 +45,26 @@ class UserDAO {
     return new UserDTO(doc.id, data.gmail, data.password, data.type, data.idtype);
   }
 
-  // Update a user
-  async updateUser(id, updatedData) {
-    await this.collection.doc(id).update(updatedData);
-    const doc = await this.collection.doc(id).get();
-    return new UserDTO(doc.id, doc.data().gmail, doc.data().password, doc.data().type, doc.data().idtype);
-  }
+// Update a user
+async updateUser(id, gmail, password, type, idtype) {
+  const updatedData = {
+    gmail: gmail,
+    password: password,
+    type: type,
+    idtype: idtype
+  };
+  
+  await this.collection.doc(id).update(updatedData);
+  const doc = await this.collection.doc(id).get();
+  
+  return new UserDTO(
+    doc.id,
+    doc.data().gmail,
+    doc.data().password,
+    doc.data().type,
+    doc.data().idtype
+  );
+}
 
   // Delete a user
   async deleteUser(id) {

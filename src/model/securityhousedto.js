@@ -5,6 +5,7 @@ class SecurityHouseDTO {
       this.name = name; // Name of the security house
       this.location = { city, country }; // Location as an object with city and country
       this.tradingContracts = tradingContracts; // List of trading contracts
+      this.earnings = earnings; // Name of the security house
     }
   }
   

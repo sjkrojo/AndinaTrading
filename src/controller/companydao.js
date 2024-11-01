@@ -34,6 +34,28 @@ async  createCompany(name, country, city, stock) {
   }
 
 
+ // Function to get all companies in a specified city and country
+async getCompaniesByLocation(country, city) {
+  const snapshot = await this.collection
+    .where('country', '==', country)
+    .where('city', '==', city)
+    .get();
+
+  if (snapshot.empty) return []; // Return an empty array if no companies found
+
+  // Retrieve companies and their associated stock data
+  const companies = await Promise.all(
+    snapshot.docs.map(async (doc) => {
+      const data = doc.data();
+      const stock = await this.stockDAO.getStockById(data.stockId);
+      return new CompanyDTO(doc.id, data.name, data.country, data.city, stock);
+    })
+  );
+
+  return companies;
+}
+ 
+
   // Function to get a company by its name
 async getCompanyByName(name) {
   const snapshot = await this.collection.where('name', '==', name).get();
@@ -120,5 +142,8 @@ async isCompanyNameInUse(name) {
     return `Company with ID ${id} has been deleted.`;
   }
 }
+
+  
+
 
 module.exports = CompanyDAO;
