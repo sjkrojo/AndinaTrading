@@ -4,12 +4,18 @@ const UserDAO = require('../controller/userdao');
 const InvestorDAO = require('../controller/investordao');
 const TradingContractDAO = require('../controller/tradingcontractdao');
 const CountryDAO = require('../controller/countrydao');
+const StockInvestorDAO = require('../controller/stockinvestordao');
+const StockDAO = require('../controller/stockdao');
+const CompanyDAO = require('../controller/companydao');
 
 const router = Router();
 const userDAO = new UserDAO();
 const countryDAO = new CountryDAO();
 const investorDAO = new InvestorDAO();
 const tradingContractDAO = new TradingContractDAO();
+const stockInvestorDAO = new StockInvestorDAO();
+const stockDAO = new StockDAO();
+const companyDAO = new CompanyDAO();
 
 router.get('/', async (req, res) => {
 
@@ -20,7 +26,7 @@ router.get('/', async (req, res) => {
         countries: countries
     }
 
-    res.render('secondmodule', {data});
+    res.render('secondmodule', { data });
 })
 
 router.get('/lg', async (req, res) => {
@@ -57,41 +63,69 @@ router.post('/backtomenu/:id', async (req, res) => {
 
 
     } else if (typeuser === 'investor') {
-        res.render('fourthmodule', { user });
+        const stocks = await stockInvestorDAO.getAllStocksForInvestor(user.idtype);
+
+        if (Array.isArray(stocks)) {
+            const stockData = await Promise.all(stocks.map(async (stock) => {
+
+                const company = await stockDAO.getStockById(stock.stockId);
+                const companyName = company.name;
+                const companyHistoricalData = company.historicalData;
+                const totalValue = stock.quantity * stock.actualPrice;
+
+                return {
+                    id: stock.id,
+                    date: stock.date,
+                    originalPrice: stock.originalPrice,
+                    quantity: stock.quantity,
+                    stockId: stock.stockId,
+                    actualPrice: stock.actualPrice,
+                    companyName: companyName,
+                    companyHistoricalData: companyHistoricalData,
+                    totalValue: totalValue 
+                    
+                };
+            }));
+
+            // Calcular ganancias totales como la suma de los valores de cada acción
+            const totalGains = stockData.reduce((sum, stock) => sum + stock.totalValue, 0);
+
+        res.render('fourthmodule', { user, stocks: stockData, totalGains,});
     } else {
         res.status(400).send('Invalid user type'); // Manejo de tipos de usuario no válidos
     }
+}
 });
 
 
 router.post('/firstmodule/:id', async (req, res) => {
 
-    const  user = req.params;
+    const user = req.params;
 
-    res.render('firstmodule', {user});
+    res.render('firstmodule', { user });
 })
 
 router.post('/menuadmin/:id', async (req, res) => {
 
-    const  user = req.params;
+    const user = req.params;
 
-    res.render('menuadmin', {user});
+    res.render('menuadmin', { user });
 })
 
 router.post('/login', async (req, res) => {
 
-    const { email , password} = req.body; 
+    const { email, password } = req.body;
     const isAuthenticated = await userDAO.authenticateUser(email, password);
-    if( isAuthenticated){
+    if (isAuthenticated) {
 
         const type = await userDAO.getUserTypeByEmail(email);
         const user = await userDAO.getUserByEmail(email);
 
-        if(type === 'admin'){
-            res.render('menuadmin', {user});
+        if (type === 'admin') {
+            res.render('menuadmin', { user });
         }
 
-        if(type === 'securityhouse'){
+        if (type === 'securityhouse') {
 
             const tradingcontractsexpired = await tradingContractDAO.checkAndMoveExpiredContracts(user.idtype);
             const tradingcontracts = await tradingContractDAO.getContractsBySecurityHouseId(user.idtype);
@@ -105,11 +139,43 @@ router.post('/login', async (req, res) => {
             res.render('fithmodule', { data });
         }
 
-        if(type === 'investor'){
-            res.render('fourthmodule', {user});
+        if (type === 'investor') {
+            const stocks = await stockInvestorDAO.getAllStocksForInvestor(user.idtype);
+
+            if (Array.isArray(stocks)) {
+                const stockData = await Promise.all(stocks.map(async (stock) => {
+
+                    const company = await stockDAO.getStockById(stock.stockId);
+                    const companyName = company.name;
+                    const companyHistoricalData = company.historicalData;
+                    const totalValue = stock.quantity * stock.actualPrice;
+
+                    return {
+                        id: stock.id,
+                        date: stock.date,
+                        originalPrice: stock.originalPrice,
+                        quantity: stock.quantity,
+                        stockId: stock.stockId,
+                        actualPrice: stock.actualPrice,
+                        companyName: companyName,
+                        companyHistoricalData: companyHistoricalData,
+                        totalValue: totalValue 
+                        
+                    };
+                }));
+
+                // Calcular ganancias totales como la suma de los valores de cada acción
+                const totalGains = stockData.reduce((sum, stock) => sum + stock.totalValue, 0);
+
+                res.render('fourthmodule', { user, stocks: stockData, totalGains,  
+              });
+            } else {
+                console.log("stocks no es un array.");
+            }
         }
-    
-    }else{
+
+
+    } else {
 
     }
 

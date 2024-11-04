@@ -3,8 +3,8 @@ const CountryDAO = require('../controller/countrydao');
 const CompanyDAO = require('../controller/companydao');
 const StockDAO = require('../controller/stockdao');
 const SecurityHouseDAO = require('../controller/securityhousedao');
-const UserDAO = require('../controller/userdao'); 
-const InvestorDAO = require('../controller/investordao'); 
+const UserDAO = require('../controller/userdao');
+const InvestorDAO = require('../controller/investordao');
 
 
 
@@ -12,7 +12,7 @@ const router = Router();
 const countryDAO = new CountryDAO();
 const companyDAO = new CompanyDAO();
 const stockDAO = new StockDAO();
-const securityhouse = new SecurityHouseDAO();
+const securityhouseDAO = new SecurityHouseDAO();
 const userDAO = new UserDAO();
 const investorDAO = new InvestorDAO();
 
@@ -72,27 +72,32 @@ router.post('/selectaction/:id', async (req, res) => {
 
 
 router.post('/buyStock/:id', async (req, res) => {
-
     const user = req.params;
-    const {accionid} = req.body;
+    const { accionid } = req.body;
     const userData = await userDAO.getUserById(user.id);
     const investorData = await investorDAO.getInvestorById(userData.idtype);
-    const houses = await securityhouse.getSecurityHouses();
+    const houses = await securityhouseDAO.getSecurityHouses();
 
     const selectedStock = await stockDAO.getStockById(accionid);
+    console.log("selectedStock" , selectedStock);
+    const companyInfo = await companyDAO.getCompanyByName(selectedStock.company);
 
+    // Filtrar las casas de seguridad según el país y la ciudad de companyInfo
+    const filteredHouses = houses.filter(house =>
+        house.location.country.trim() === companyInfo.name.trim() &&
+        house.location.city.trim() === companyInfo.country.trim()
+    );
+    
     const data = {
         user: user,
         userData: userData,
-        houses: houses,
+        houses: filteredHouses, 
         investorData: investorData,
         selectedStock: selectedStock
     }
 
     res.render('generacionContratosModule', { data });
-
-})
-
+});
 
 
 router.post('/module/', async (req, res) => {
@@ -146,13 +151,22 @@ router.post('/selectaction/', async (req, res) => {
 
 router.post('/buyStock/', async (req, res) => {
 
-    const {accionid} = req.body;
-    const houses = await securityhouse.getSecurityHouses();
+    const { accionid } = req.body;
+    const houses = await securityhouseDAO.getSecurityHouses();
+   
     const selectedStock = await stockDAO.getStockById(accionid);
+    const companyInfo = await companyDAO.getCompanyByName(selectedStock.company);
 
+    // Filtrar las casas de seguridad según el país y la ciudad de companyInfo
+    const filteredHouses = houses.filter(house =>
+        house.location.country.trim() === companyInfo.name.trim() &&
+        house.location.city.trim() === companyInfo.country.trim()
+    );
+    
+    
     const data = {
         selectedStock: selectedStock,
-        houses: houses
+        houses: filteredHouses
     }
 
     res.render('generacionContratosModule', { data });

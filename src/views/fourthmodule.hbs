@@ -1,4 +1,5 @@
 <body class="bg-light">
+
     <div class="container mt-5">
         <h2 class="text-center mb-4">Portal de Inversionista</h2>
 
@@ -8,29 +9,61 @@
                 Órdenes de Compra y Venta
             </div>
             <div class="card-body">
-                <form action="/api/orders" method="POST">
+                <form action="/api/contractCreat/ventaContrato/{{user.id}}" method="POST">
                     <div class="mb-3">
                         <label for="stock" class="form-label">Selecciona una Acción</label>
                         <select class="form-select" id="stock" name="stock" required>
                             <option selected disabled>Selecciona una acción</option>
-                            <option value="AAPL">Apple Inc. (AAPL)</option>
-                            <option value="GOOGL">Alphabet Inc. (GOOGL)</option>
-                            <option value="AMZN">Amazon.com Inc. (AMZN)</option>
-                            <option value="MSFT">Microsoft Corp. (MSFT)</option>
+                            {{#each stocks}}
+                            <option value="{{this.id}}" data-quantity="{{this.quantity}}">
+                                {{this.companyName}} - Cantidad: {{this.quantity}}
+                            </option>
+                            {{/each}}
                         </select>
                     </div>
+
                     <div class="mb-3">
                         <label for="orderType" class="form-label">Tipo de Orden</label>
-                        <select class="form-select" id="orderType" name="orderType" required>
-                            <option selected disabled>Selecciona el tipo de orden</option>
-                            <option value="buy" disabled>Compra</option>
-                            <option value="sell">Venta</option>
-                        </select>
+                        <input tpye="text" class="form-control" id="orderType" name="orderType" value="Venta" required
+                            readonly>
                     </div>
+
+
                     <div class="mb-3">
                         <label for="quantity" class="form-label">Cantidad</label>
-                        <input type="number" class="form-control" id="quantity" name="quantity" required>
+                        <input type="number" class="form-control" id="amount" name="amount" min="1" required>
+                        <div id="quantityError" class="text-danger" style="display:none;">La cantidad debe ser mayor que
+                            0 y menor o igual a la cantidad disponible.</div>
                     </div>
+
+                    <script>
+                        document.getElementById('stock').addEventListener('change', function () {
+                            const selectedOption = this.options[this.selectedIndex];
+                            const maxQuantity = selectedOption.getAttribute('data-quantity');
+
+                            const amountInput = document.getElementById('amount');
+                            amountInput.max = maxQuantity; // Limita el máximo en el campo de cantidad
+                            amountInput.min = 1; // Establece el mínimo en 1
+                            amountInput.value = ''; // Limpia el campo si hay un valor previo
+                            amountInput.placeholder = `Máximo: ${maxQuantity}`; // Añade una indicación visual del máximo
+                            document.getElementById('quantityError').style.display = 'none'; // Oculta mensaje de error al cambiar la acción
+                        });
+
+                        // Validación al enviar el formulario
+                        document.getElementById('amount').addEventListener('input', function () {
+                            const amountInput = this;
+                            const maxQuantity = parseInt(amountInput.max); // Asegúrate de tratarlo como un número
+                            const currentAmount = parseInt(amountInput.value); // Convertir el valor a un número
+                            const errorMessage = document.getElementById('quantityError');
+
+                            // Asegúrate de que la comparación sea correcta
+                            if (currentAmount < 1 || currentAmount > maxQuantity) {
+                                errorMessage.style.display = 'block'; // Muestra mensaje de error
+                            } else {
+                                errorMessage.style.display = 'none'; // Oculta mensaje de error
+                            }
+                        });
+                    </script>
                     <button type="submit" class="btn btn-primary w-100">Enviar Orden</button>
                 </form>
             </div>
@@ -42,24 +75,41 @@
                 Estado de Ganancias
             </div>
             <div class="card-body">
-                <p><strong>Ganancias Totales:</strong> $<span id="totalGains">0.00</span></p>
+                <p><strong>Ganancias Totales:</strong> $<span id="totalGains">{{totalGains}}</span></p>
+                <!-- Mostrar ganancias totales -->
                 <p><strong>Acciones en Cartera:</strong></p>
                 <ul id="portfolio" class="list-group">
-                    <li class="list-group-item">AAPL: 10 acciones ($100.00)</li>
-                    <li class="list-group-item">GOOGL: 5 acciones ($50.00)</li>
+                    {{#each stocks}}
+                    <li class="list-group-item">Empresa: {{this.companyName}}</br>Cantidad acciones: {{this.quantity}}
+                        </br>Valor acciones totales: (${{this.totalValue}})</li>
+                    {{else}}
+                    <li class="list-group-item">No hay acciones en cartera.</li>
+                    {{/each}}
                 </ul>
             </div>
         </div>
 
-        <!-- Panel for Stock Price Evolution -->
         <div class="card">
             <div class="card-header bg-warning text-white text-center">
                 Evolución del Valor de la Acción (Últimos 5 Días)
             </div>
+            <br>
+            <p class="text-center">Selecciona una empresa para visualizar la gráfica</p>
+            <br>
+            <select class="form-select" id="stock22" name="stock22" required>
+
+                <option selected disabled>Selecciona una acción</option>
+                {{#each stocks}}
+                <option value="{{this.id}}" data-historical='[{{this.companyHistoricalData}}]'>
+                    {{this.companyName}}
+                </option>
+                {{/each}}
+            </select>
+            <br>
             <div class="card-body">
-                <div id="stockPriceChart" style="height: 300px;"></div>
-                <!-- Example placeholder for chart; replace with chart library code -->
-                <p class="text-center">Gráfico de evolución de precios irá aquí</p>
+                <div id="stockPriceChart" style="height: 400px; width: 100%;">
+                    <canvas id="myChart" width="900" height="300"></canvas>
+                </div>
             </div>
         </div>
 
@@ -72,7 +122,112 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+
+
+        document.getElementById('stock22').addEventListener('change', function () {
+            const selectElement = document.getElementById('stock22');
+            const selectedOption = selectElement.options[selectElement.selectedIndex];
+
+            if (!selectedOption || !selectedOption.dataset.historical) {
+                alert('Selecciona una acción para ver la gráfica.');
+                return;
+            }
+
+            let historicalData = selectedOption.dataset.historical;
+            console.log("Data histórica cruda:", historicalData);
+
+            try {
+                historicalData = JSON.parse(historicalData);
+                console.log("Data histórica convertida a array:", historicalData);
+                if (!Array.isArray(historicalData) || historicalData.length !== 5) {
+                    throw new Error("Los datos históricos no son un array de cinco valores.");
+                }
+            } catch (error) {
+                console.error("Error al analizar los datos históricos:", error);
+                alert("Hubo un problema con los datos históricos de la acción seleccionada.");
+                return;
+            }
+
+            const labels = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
+            const ctx = document.getElementById('myChart').getContext('2d');
+
+            if (window.myChartInstance) {
+                window.myChartInstance.destroy();
+            }
+
+            window.myChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Precio de la Acción',
+                        data: historicalData,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',  // Color de fondo
+                        borderColor: 'rgba(75, 192, 192, 1)',      // Color de la línea
+                        borderWidth: 3,                           // Grosor de la línea
+                        pointBackgroundColor: 'rgba(255, 99, 132, 1)', // Color de los puntos
+                        pointBorderColor: 'rgba(255, 255, 255, 1)', // Borde de los puntos
+                        pointRadius: 5,                          // Tamaño de los puntos
+                        pointHoverRadius: 7,                     // Tamaño al pasar el mouse
+                        fill: true,
+                        tension: 0                                  // Líneas rectas
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            min: Math.min(...historicalData) - 5,
+                            max: Math.max(...historicalData) + 5,
+                            title: {
+                                display: true,
+                                text: 'Valor de la Acción ($)',
+                                font: {
+                                    size: 16
+                                }
+                            },
+                            ticks: {
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Días',
+                                font: {
+                                    size: 16
+                                }
+                            },
+                            ticks: {
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+
     <script>
         // Placeholder JavaScript for handling chart generation and data fetching can be added here
     </script>
