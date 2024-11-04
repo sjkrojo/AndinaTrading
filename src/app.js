@@ -25,6 +25,7 @@ app.use('/api/investors', require("./routes/investor"));
 app.use('/api/contractCreat', require("./routes/contractCreat"));
 app.use('/api/secondmodule', require("./routes/secondmodule"));
 app.use('/api/fithmodule', require("./routes/fithmodule"));
+app.use('/api/reports', require("./routes/reports"));
 
 
 app.use(express.static(path.join(__dirname, 'public')));

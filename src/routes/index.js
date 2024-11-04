@@ -112,6 +112,14 @@ router.post('/menuadmin/:id', async (req, res) => {
     res.render('menuadmin', { user });
 })
 
+router.post('/reports/:id', async (req, res) => {
+    const user = req.params;
+    const countries = await countryDAO.getAllCountries(); 
+
+    res.render('reports', { user, countries }); 
+});
+
+
 router.post('/login', async (req, res) => {
 
     const { email, password } = req.body;
