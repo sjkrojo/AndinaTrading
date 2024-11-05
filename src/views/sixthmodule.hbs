@@ -2,46 +2,49 @@
 <div class="container my-4">
     <h2 class="text-center">Módulo de Consolidación de Información</h2>
     
+
+        {{#unless data.user.id}}
+        <div class="col text-end">
+            <a href="/lg" class="btn btn-outline-secondary">Login</a>
+        </div>
+        {{else}}
+
+        <form action="/backtomenu/{{data.user.id}}" method="post" class="mb-3">
+            <button type="submit" class="btn btn-secondary w-100">Volver</button>
+        </form>
+        {{/unless}}
+
     <!-- Filtros de búsqueda -->
     <div class="card mb-4">
         <div class="card-body">
             <h5 class="card-title">Filtros de Búsqueda</h5>
-            <form class="form-row">
+            <form action="/api/sixthmodule/confirmarinformacionbursatil/{{data.user.id}}" method="post" class="form-row">
                 <div class="form-group col-md-3">
                     <label for="localizacion">Localización</label>
-                    <select id="localizacion" class="form-control">
-                        <option value="todas" selected>Todas</option>
-                        <option value="region1">Región 1</option>
-                        <option value="region2">Región 2</option>
-                        <option value="region3">Región 3</option>
+                    <select name="localizacion" id="localizacion" class="form-control">
+                        <option selected disabled>Seleccione una localización</option>
+                        {{#each data.countries}}
+                        <option value="{{this.id}}">{{this.countryName}}, {{this.cityName}}</option>
+                        {{/each}}
                     </select>
                 </div>
                 <div class="form-group col-md-3">
                     <label for="tipoInversionista">Tipo de Inversionista</label>
-                    <select id="tipoInversionista" class="form-control">
-                        <option value="todos" selected>Todos</option>
-                        <option value="low">Low</option>
-                        <option value="individual">Medium</option>
-                        <option value="high">High</option>
+                    <select name="tipoInversionista" id="tipoInversionista" class="form-control">
+                    <option selected disabled>Seleccione un tipo</option>
+                        <option value="Low">Low</option>
+                        <option value="Individual">Medium</option>
+                        <option value="High">High</option>
                     </select>
                 </div>
-                <div class="form-group col-md-3">
-                    <label for="rangoFecha">Rango de Fecha</label>
-                    <div class="input-group">
-                        <input type="date" id="fechaInicio" class="form-control">
-                        <div class="input-group-prepend input-group-append">
-                            <span class="input-group-text">a</span>
-                        </div>
-                        <input type="date" id="fechaFin" class="form-control">
-                    </div>
-                </div>
                 <div class="form-group col-md-12 text-right">
-                    <button type="button" class="btn btn-primary mt-2" onclick="consolidarInformacion()">Consolidar Información</button>
+                    <button type="submit" class="btn btn-primary mt-2" >Consolidar Información</button>
                 </div>
             </form>
         </div>
     </div>
 
+{{#if data.trandingsWithCountry}}
     <!-- Resultados de la consolidación -->
     <div class="card mb-4">
         <div class="card-body">
@@ -52,29 +55,32 @@
                         <th>Comisionista</th>
                         <th>Inversionista</th>
                         <th>Localización</th>
+                        <th>Nombre de la Acción</th>
                         <th>Valor de Acción</th>
                         <th>Situación Financiera</th>
                         <th>Comisiones Recibidas</th>
+                        <th>Tipo de inversionista</th>
                     </tr>
                 </thead>
                 <tbody id="consolidacionResultados">
+                        {{#each data.trandingsWithCountry}}
                 <tr>
-                    <td>Comisionista XYZ</td>
-                    <td>María González</td>
-                    <td>Medellín</td>
-                    <td>$120</td>
-                    <td>En crecimiento</td>
-                    <td>$6,200</td>
+                    <td>{{securityHouseDTO.name}}</td>
+                    <td>{{investorDTO.name}}</td>
+                    <td>{{country.countryName}}, {{country.cityName}}</td>
+                    <td>{{stock.name}}</td>
+                    <td>{{stock.value}}</td>
+                    <td>{{country.economicSituation}}</td>
+                    <td>{{securityHouseDTO.earnings}}</td>
+                    <td>{{investorDTO.riskProfile}}</td>
                 </tr>
+                        {{/each}}
                 </tbody>
             </table>
         </div>
     </div>
+{{/if}}
 
-    <!-- Botón de exportación -->
-    <div class="text-right">
-        <button class="btn btn-success" onclick="exportarCSV()">Exportar a CSV</button>
-    </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

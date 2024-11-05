@@ -44,8 +44,8 @@
         <div class="col-md-4">
         <h3>{{data.houseshow.id}}</h3>
         <h3>{{data.houseshow.name}}</h3>
-        <p>{{data.houseshow.location.country}}</p>
-        <p>{{data.houseshow.location.city}}</p>
+        <p>{{data.countriesshow.countryName}}</p>
+        <p>{{data.countriesshow.cityName}}</p>
         </div>
 
         <form action="{{#unless data.house.id}}/api/securityhouses/createhouse/{{data.user.id}}{{else}}/api/securityhouses/update/{{data.user.id}}{{/unless}}" method="post">
@@ -62,14 +62,12 @@
                 <label for="name" class="form-label">Nombre de la Empresa</label>
                 <input type="text" class="form-control" id="name" name="house_name" value="{{data.house.name}}" placeholder="Ingrese el nombre de la empresa" required>
             </div>
-            <div class="mb-3">
-                <label for="country" class="form-label">País</label>
-                <input type="text" class="form-control" id="country" name="house_country" value="{{data.house.location.country}}" placeholder="Ingrese el país" required>
-            </div>
-            <div class="mb-3">
-                <label for="city" class="form-label">Ciudad</label>
-                <input type="text" class="form-control" id="city" name="house_city" value="{{data.house.location.city}}" placeholder="Ingrese la ciudad" required>
-            </div>
+                <select class="form-select mb-3" name="location" required>
+                    <option selected disabled>Seleccione un pais y su ciudad</option>
+                    {{#each data.countries}}
+                         <option value="{{id}}">{{countryName}}, {{cityName}}</option>
+                    {{/each}}
+                </select>
             <button type="submit" class="btn btn-primary w-100">{{#unless data.house.id}}Crear{{else}}Actualizar{{/unless}}</button>
         </form>
 

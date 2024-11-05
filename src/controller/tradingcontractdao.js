@@ -121,6 +121,35 @@ async getTradingContractById(id) {
     }
 }
 
+// Get all trading contracts filtered by investor's risk profile and security house location
+async getTradingContractsByRiskProfileAndLocation(riskProfile, location) {
+  try {
+    const snapshot = await this.collection
+      .where('investorDTO.riskProfile', '==', riskProfile)
+      .where('securityHouseDTO.location', '==', location)
+      .get();
+
+    if (snapshot.empty) {
+      console.log('No trading contracts found with the specified filters.');
+      return []; // Return empty array if no contracts found
+    }
+
+
+      // Map the results to an array of contract data
+      const contracts = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+        expirationDate: doc.data().expirationDate.toDate() // Convert Firestore timestamp to JavaScript Date if necessary
+    }));
+
+    // Return the filtered contracts
+    return contracts;
+  } catch (error) {
+    console.error("Error retrieving trading contracts:", error);
+    throw error; // Re-throw the error for further handling if necessary
+  }
+}
+
 
 
 // Assuming this function is part of the TradingContractDAO class
@@ -218,5 +247,7 @@ async getAllTradingContractsHistory() {
 
   // Additional methods can be added as needed, such as get, delete, etc.
 }
+
+
 
 module.exports = TradingContractDAO;
