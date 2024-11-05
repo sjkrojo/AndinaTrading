@@ -33,6 +33,54 @@ async createInvestor({ name, address, phone, investmentCapacity }) {
     return { id: docRef.id, ...docSnapshot.data() };
 }
 
+// Nueva función para actualizar solo el investmentCapacity
+async updateInvestmentCapacity(id, newInvestmentCapacity) {
+    const doc = await this.collection.doc(id).get();
+    if (!doc.exists) return null;
+
+    // Calcular el nuevo perfil de riesgo en función del nuevo investmentCapacity
+    const riskProfile = this.calculateRiskProfile(newInvestmentCapacity);
+
+    // Actualizar el investmentCapacity y el riskProfile en Firestore
+    await this.collection.doc(id).update({
+        investmentCapacity: newInvestmentCapacity,
+        riskProfile
+    });
+    
+    const updatedDoc = await this.collection.doc(id).get();
+
+    return { id: updatedDoc.id, ...updatedDoc.data() };
+}
+
+// dao/InvestorDAO.js
+
+// Nueva función para restar un valor del investmentCapacity y actualizar el perfil de riesgo
+async decrementInvestmentCapacity(id, totalAmount) {
+    const doc = await this.collection.doc(id).get();
+    if (!doc.exists) return null;
+
+    // Obtener el investmentCapacity actual
+    const currentData = doc.data();
+    let currentInvestmentCapacity = currentData.investmentCapacity;
+
+    // Calcular el nuevo investmentCapacity restando el totalAmount
+    let newInvestmentCapacity = currentInvestmentCapacity - totalAmount;
+    if (newInvestmentCapacity < 0) newInvestmentCapacity = 0; // Evita valores negativos
+
+    // Calcular el nuevo perfil de riesgo en función del nuevo investmentCapacity
+    const riskProfile = this.calculateRiskProfile(newInvestmentCapacity);
+
+    // Actualizar el investmentCapacity y el riskProfile en Firestore
+    await this.collection.doc(id).update({
+        investmentCapacity: newInvestmentCapacity,
+        riskProfile
+    });
+    
+    const updatedDoc = await this.collection.doc(id).get();
+
+    return { id: updatedDoc.id, ...updatedDoc.data() };
+}
+
 
     async getInvestors() {
         const snapshot = await this.collection.get();
@@ -95,5 +143,8 @@ async getInvestorById(id) {
         else return 'High';
     }
 }
+
+
+
 
 module.exports = InvestorDAO;

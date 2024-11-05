@@ -8,7 +8,6 @@ const UserDAO = require('../controller/userdao');
 const InvestorDAO = require('../controller/investordao'); 
 const StockInvestorDAO = require('../controller/stockinvestordao'); 
 
-
 const router = Router();
 const countryDAO = new CountryDAO();
 const companyDAO = new CompanyDAO();
@@ -60,7 +59,7 @@ router.post('/selecthistory/:id', async (req, res) => {
 router.post('/confirm/:id', async (req, res) => {
 
     const user = req.params;
-    const {investorid,stockid, amount,contractId, action } = req.body;
+    const {investorid,stockid, amount,contractId, action, type } = req.body;
 
     const stockactual = await stockDAO.getStockById(stockid);
 
@@ -71,8 +70,22 @@ router.post('/confirm/:id', async (req, res) => {
     console.log(investorid);
     console.log(amount);
     console.log(stockactual.value);
-    console.log(stockid);
-    const createstockinvestor = await stockinvestorDAO.createStockForInvestor(investorid,amount, stockactual.value, stockactual.value, stockid, new Date());
+    console.log(stockid);updateStockQuantity
+    money_total = amount *stockactual.value;
+    money_security = money_total * 0.1;
+    money_total = money_total -money_security;
+    if (type == 'Compra'){
+        const update = await companyDAO.updateStockQuantity(stockactual.company , amount);
+        const updateInvestor = await investorDAO.decrementInvestmentCapacity(investorid, money_total );    
+        const createstockinvestor = await stockinvestorDAO.createStockForInvestor(investorid,amount, stockactual.value, stockactual.value, stockid, new Date());
+   
+    }else{
+        const deletestockinvestor = await stockinvestorDAO.deleteStockForInvestor(investorid,stockid);
+        const update = await companyDAO.increaseStockQuantity(stockactual.company , amount);
+        const updateInvestor = await investorDAO.increaseStockQuantity(investorid, money_total );    
+    }
+    const updateearnings = securityhouse.updateEarnings(usersecu.idtype,money_security);
+    
     const updatecontracts = await tradingContractDAO.updateAndMoveTradingContract(contractId, true);
     }else{
         const updatecontracts = await tradingContractDAO.updateAndMoveTradingContract(contractId, false);
@@ -86,7 +99,5 @@ router.post('/confirm/:id', async (req, res) => {
 
     res.render('fithmodule', { data })
 })
-
-
 
 module.exports = router;

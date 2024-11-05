@@ -1,0 +1,82 @@
+
+<div class="container my-4">
+    <h2 class="text-center">Módulo de Consolidación de Información</h2>
+    
+    <!-- Filtros de búsqueda -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Filtros de Búsqueda</h5>
+            <form class="form-row">
+                <div class="form-group col-md-3">
+                    <label for="localizacion">Localización</label>
+                    <select id="localizacion" class="form-control">
+                        <option value="todas" selected>Todas</option>
+                        <option value="region1">Región 1</option>
+                        <option value="region2">Región 2</option>
+                        <option value="region3">Región 3</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="tipoInversionista">Tipo de Inversionista</label>
+                    <select id="tipoInversionista" class="form-control">
+                        <option value="todos" selected>Todos</option>
+                        <option value="low">Low</option>
+                        <option value="individual">Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="rangoFecha">Rango de Fecha</label>
+                    <div class="input-group">
+                        <input type="date" id="fechaInicio" class="form-control">
+                        <div class="input-group-prepend input-group-append">
+                            <span class="input-group-text">a</span>
+                        </div>
+                        <input type="date" id="fechaFin" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group col-md-12 text-right">
+                    <button type="button" class="btn btn-primary mt-2" onclick="consolidarInformacion()">Consolidar Información</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Resultados de la consolidación -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Resultados de la Consolidación</h5>
+            <table class="table table-bordered table-hover">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Comisionista</th>
+                        <th>Inversionista</th>
+                        <th>Localización</th>
+                        <th>Valor de Acción</th>
+                        <th>Situación Financiera</th>
+                        <th>Comisiones Recibidas</th>
+                    </tr>
+                </thead>
+                <tbody id="consolidacionResultados">
+                <tr>
+                    <td>Comisionista XYZ</td>
+                    <td>María González</td>
+                    <td>Medellín</td>
+                    <td>$120</td>
+                    <td>En crecimiento</td>
+                    <td>$6,200</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Botón de exportación -->
+    <div class="text-right">
+        <button class="btn btn-success" onclick="exportarCSV()">Exportar a CSV</button>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

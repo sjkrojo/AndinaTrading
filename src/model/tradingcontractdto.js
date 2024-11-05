@@ -16,4 +16,6 @@ class TradingContractDTO {
   }
 }
 
+
+
 module.exports = TradingContractDTO;

@@ -28,6 +28,32 @@ async isNameInUse(name) {
   return !querySnapshot.empty; // Returns true if name is found, otherwise false
 }
 
+
+// Función para actualizar el atributo earnings sumando un amount especificado
+async updateEarnings(id, amount) {
+  // Obtener el documento de la security house por ID
+  const doc = await this.collection.doc(id).get();
+  if (!doc.exists) {
+      throw new Error(`Security house with ID ${id} does not exist.`);
+  }
+
+  // Obtener el valor actual de earnings
+  const currentData = doc.data();
+  const currentEarnings = currentData.earnings || 0; // Si earnings no existe, se asume 0
+
+  // Calcular el nuevo valor de earnings
+  const newEarnings = currentEarnings + amount;
+
+  // Actualizar earnings en Firestore
+  await this.collection.doc(id).update({ earnings: newEarnings });
+
+  // Obtener el documento actualizado para retornar los nuevos datos
+  const updatedDoc = await this.collection.doc(id).get();
+
+  return { id: updatedDoc.id, ...updatedDoc.data() };
+}
+
+
   // Get all security houses
   async getSecurityHouses() {
     const snapshot = await this.collection.get();

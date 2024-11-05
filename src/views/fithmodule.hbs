@@ -68,6 +68,7 @@
                             <p><strong>Description:</strong> {{data.selectedContract.expirationDate}}</p>
                             <input type="hidden" name="stockid" value="{{data.selectedContract.stock}}">
                             <input type="hidden" name="amount" value="{{data.selectedContract.amount}}">
+                            <input type="hidden" name="type" value="{{data.selectedContract.type}}">
                             <input type="hidden" name="investorid" value="{{data.selectedContract.investorDTO.id}}">
 
                                 <select class="form-select" id="action" name="action" required>

@@ -33,6 +33,98 @@ async  createCompany(name, country, city, stock) {
     return companies;
   }
 
+// Función para aumentar la cantidad de stocks en almacenamiento y reducir los stocks vendidos
+async increaseStockQuantity(companyId, amount) {
+  // Obtener el documento de la compañía por ID
+  const doc = await this.collection.doc(companyId).get();
+  if (!doc.exists) {
+    throw new Error(`Company with ID ${companyId} does not exist.`);
+  }
+
+  const data = doc.data();
+  const stockId = data.stockId;
+
+  // Obtener el stock actual asociado con la empresa
+  const stock = await this.stockDAO.getStockById(stockId);
+  if (!stock) {
+    throw new Error(`Stock with ID ${stockId} does not exist.`);
+  }
+
+  // Verificar que haya suficientes stocks vendidos para reducir la cantidad deseada
+  if ((stock.soldStocks || 0) < amount) {
+    throw new Error(`Insufficient sold stocks. Available: ${stock.soldStocks || 0}`);
+  }
+
+  // Actualizar el stock en almacenamiento y el stock vendido
+  const newStockInStorage = stock.stockInStorage + amount;
+  const newSoldStocks = stock.soldStocks - amount;
+
+  // Actualizar el stock con los nuevos valores
+  await this.stockDAO.updateStock(
+    stockId,
+    stock.name,
+    stock.description,
+    stock.date,
+    stock.value,
+    stock.company,
+    newStockInStorage,
+    newSoldStocks
+  );
+
+  return {
+    message: `Stock increased successfully.`,
+    stockInStorage: newStockInStorage,
+    soldStocks: newSoldStocks
+  };
+}
+
+
+
+// Función para actualizar la cantidad de stocks en inventario y vendidos
+async updateStockQuantity(companyId, amount) {
+  // Obtener el documento de la compañía por ID
+  const doc = await this.collection.doc(companyId).get();
+  if (!doc.exists) {
+    throw new Error(`Company with ID ${companyId} does not exist.`);
+  }
+
+  const data = doc.data();
+  const stockId = data.stockId;
+
+  // Obtener el stock actual asociado con la empresa
+  const stock = await this.stockDAO.getStockById(stockId);
+  if (!stock) {
+    throw new Error(`Stock with ID ${stockId} does not exist.`);
+  }
+
+  // Verificar que haya suficientes stocks en almacenamiento para restar la cantidad deseada
+  if (stock.stockInStorage < amount) {
+    throw new Error(`Insufficient stock in storage. Available: ${stock.stockInStorage}`);
+  }
+
+  // Actualizar el stock en almacenamiento y el stock vendido
+  const newStockInStorage = stock.stockInStorage - amount;
+  const newSoldStocks = (stock.soldStocks || 0) + amount; // Inicializar soldStocks en 0 si no existe
+
+  // Actualizar el stock con los nuevos valores
+  await this.stockDAO.updateStock(
+    stockId,
+    stock.name,
+    stock.description,
+    stock.date,
+    stock.value,
+    stock.company,
+    newStockInStorage,
+    newSoldStocks
+  );
+
+  return {
+    message: `Stock updated successfully.`,
+    stockInStorage: newStockInStorage,
+    soldStocks: newSoldStocks
+  };
+}
+
 
  // Function to get all companies in a specified city and country
 async getCompaniesByLocation(country, city) {
