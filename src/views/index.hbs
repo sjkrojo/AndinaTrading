@@ -1,19 +1,99 @@
-<body class="d-flex justify-content-center align-items-center vh-100 bg-light">
+<style>
+    /* Definimos las variables para los colores */
+    :root {
+        --primary-color: #ff6600;
+        /* Naranja */
+        --secondary-color: #f5f1f1;
+        /* Blanco */
+        --highlight-color: #ff9900;
+        /* Un tono más claro de naranja para destacar */
+        --background-color: #f5f1f1;
+        --card-body-background: #d8d4d4;
+        /* Blanco para el fondo de las tarjetas */
+        --list-group-background: #f5f1f1;
+        /* Blanco para el fondo de la lista */
+        --list-group-item-background: #f5f1f1;
+        /* Un gris muy claro para los elementos de la lista */
+        --list-group-item-hover: #e0dbdb;
+        /* Un gris claro para el hover de los elementos de la lista */
+        --input-border-color: #ff6600;
+        /* Color del borde de los inputs */
+    }
+
+    body {
+        background-color: var(--background-color);
+    }
+
+    .card {
+        background-color: var(--card-body-background);
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        /* Sombra de la tarjeta */
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: var(--highlight-color);
+        /* Cambia el color del borde al hacer foco */
+        box-shadow: 0 0 5px rgba(255, 102, 0, 0.5);
+        /* Sombra al foco */
+    }
+
+    .btn-primary {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+
+    .btn-primary:hover {
+        background-color: var(--highlight-color);
+    }
+
+    .form-select-container,
+    .form-group {
+        background-color: #d8d4d4;
+        /* Cambia a blanco para que contraste */
+    }
+
+    /* Agregar esta regla para que el texto de las etiquetas y entradas sea más oscuro */
+    label,
+    .form-control {
+        color: #333;
+        /* Cambia el color a un tono más oscuro */
+    }
+
+    /* Estilo para el encabezado h1 */
+    h1 {
+        color: var(--primary-color);
+        /* Color del encabezado usando la variable de color primario */
+    }
+
+    /* Media queries para ajustar el padding en pantallas pequeñas */
+    @media (max-width: 576px) {
+        .card {
+            padding: 2rem;
+            /* Reduce el padding en pantallas pequeñas */
+        }
+    }
+</style>
+
+<body class="d-flex justify-content-center align-items-center vh-100 ">
     <div class="card p-4 shadow" style="max-width: 400px; width: 100%;">
-        <h1 class="text-center mb-4">Andina Trading</h1>
-        
+        <h1 class="text-center mb-4"><strong>Andina Trading</strong></h1>
+
         <form action="/login" method="POST">
             <div class="mb-3">
                 <label for="email" class="form-label">Correo Electrónico</label>
-                <input type="email" name="email" class="form-control" id="email" placeholder="Ingresa tu correo" required>
+                <input type="email" name="email" class="form-control" id="email" placeholder="Ingresa tu correo"
+                    required>
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label">Contraseña</label>
-                <input type="password" name="password" class="form-control" id="password" placeholder="Ingresa tu contraseña" required>
+                <input type="password" name="password" class="form-control" id="password"
+                    placeholder="Ingresa tu contraseña" required>
             </div>
             <button type="submit" class="btn btn-primary w-100">Iniciar Sesión</button>
         </form>
-        
+
         <div class="text-center mt-3">
             <a href="#">¿Olvidaste tu contraseña?</a>
         </div>
@@ -22,3 +102,4 @@
     <!-- Bootstrap JS y dependencias -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"></script>
+</body>

@@ -1,114 +1,198 @@
- <div class="container mt-5">
-        <h1 class="text-center">{{data.message}}</h1>
-        <h2 class="text-center">CRUD de Empresa y Stock</h2>
+<style>
+    /* Paleta de colores */
+    :root {
+        --orange-color: #ff6600;
+        --white-color: #ffffff;
+        --hover-orange: #ff8533;
+        --background-color: #f5f5f5;
+    }
 
-        <div class="col-md-4">
-            <h4>Empresas Disponibles</h4>
-            <form action="/api/companies/deletecompany/{{data.user.id}}" method="post">
-                <select class="form-select mb-3" name="eliminar" required>
-                    <option selected disabled>Seleccione una empresa</option>
-                    {{#each data.companies}}
-                         <option value="{{id}}">{{name}}</option>
-                    {{/each}}
-                </select>
-                <button type="submit" class="btn btn-lg btn-primary">Eliminar</button>
-            </form>
-        </div>
-        
-        <div class="col-md-4">
-            <h4>Editar Empresa</h4>
-            <form action="/api/companies/editcompany/{{data.user.id}}" method="post">
-                <select class="form-select mb-3" name="editar" required>
-                    <option selected disabled>Seleccione una empresa</option>
-                    {{#each data.companies}}
-                         <option value="{{id}}">{{name}}</option>
-                    {{/each}}
-                </select>
-                <button type="submit" class="btn btn-lg btn-primary">Editar</button>
-            </form>
-        </div>
+    /* Estilo general de la página */
+    body {
+        background-color: var(--background-color);
+    }
 
-        <div class="col-md-4">
-            <h4>Mostrar Empresa</h4>
-            <form action="/api/companies/showcompany/{{data.user.id}}" method="post">
-                <select class="form-select mb-3" name="mostrar" required>
-                    <option selected disabled>Seleccione una empresa</option>
-                    {{#each data.companies}}
-                         <option value="{{id}}">{{name}}</option>
-                    {{/each}}
-                </select>
-                <button type="submit" class="btn btn-lg btn-primary">Seleccionar</button>
-            </form>
-        </div>
+    /* Estilo del contenedor principal */
+    .container {
+        background-color: var(--white-color);
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
 
-        <div class="col-md-4">
-        <h3>{{data.companyshow.id}}</h3>
-        <h3>{{data.companyshow.name}}</h3>
-        <p>{{data.companyshow.country}}</p>
-        <p>{{data.companyshow.city}}</p>
-        <h4>{{data.companyshow.stockDTO.id}}</h4>              
-        <h4>{{data.companyshow.stockDTO.name}}</h4>   
-        <p>{{data.companyshow.stockDTO.description}}</p>   
-        <p>{{data.companyshow.stockDTO.description}}</p>   
-        <p>{{data.companyshow.stockDTO.date}}</p>   
-        <p>{{data.companyshow.stockDTO.amountSold}}</p>   
-        <p>{{data.companyshow.stockDTO.inStorage}}</p>   
-        </div>
+    /* Títulos en color naranja */
+    h1,
+    h2,
+    h4 {
+        color: var(--orange-color);
+        text-align: center;
+    }
 
-        <form action="{{#unless data.company.id}}/api/companies/createcompany/{{data.user.id}}{{else}}/api/companies/update/{{data.user.id}}{{/unless}}" method="post">
-            <h4>Valores de la Empresa</h4>
+    /* Estilo de botones */
+    .btn-primary {
+        background-color: var(--orange-color);
+        border: none;
+        color: var(--white-color);
+        font-weight: bold;
+    }
 
-            {{#if data.company.id}}
-                <div class="mb-3">
-                 <label for="name" class="form-label">ID de la Empresa</label>
-                 <input type="text" class="form-control" id="idcompany" name="idcompany" value="{{data.company.id}}" placeholder="" required readonly>
-                </div>
-            {{/if}}
+    /* Hover para los botones */
+    .btn-primary:hover {
+        background-color: var(--hover-orange);
+    }
 
-            <div class="mb-3">
-                <label for="name" class="form-label">Nombre de la Empresa</label>
-                <input type="text" class="form-control" id="name" name="company_name" value="{{data.company.name}}" placeholder="Ingrese el nombre de la empresa" required>
-            </div>
-            <div class="mb-3">
-                <label for="country" class="form-label">País</label>
-                <input type="text" class="form-control" id="country" name="company_country" value="{{data.company.country}}" placeholder="Ingrese el país" required>
-            </div>
-            <div class="mb-3">
-                <label for="city" class="form-label">Ciudad</label>
-                <input type="text" class="form-control" id="city" name="company_city" value="{{data.company.city}}" placeholder="Ingrese la ciudad" required>
-            </div>
-            <h4>Valores de Stock</h4>
+    /* Estilos de formularios */
+    .form-label {
+        color: var(--orange-color);
+    }
 
-            
-            {{#if data.company.id}}
-                <div class="mb-3">
-                 <label for="name" class="form-label">ID de la Accion</label>
-                 <input type="text" class="form-control" id="idstock" name="idstock" value="{{data.company.stockDTO.id}}" placeholder="" required readonly>
-                </div>
-            {{/if}}
+    /* Select de formularios */
+    .form-select,
+    .form-control {
+        background-color: var(--white-color);
+        border: 1px solid var(--orange-color);
+    }
 
-            <div class="mb-3">
-                <label for="stockName" class="form-label">Nombre del Producto</label>
-                <input type="text" class="form-control" id="stockName" name="product_name" value="{{data.company.stockDTO.name}}" placeholder="Ingrese el nombre del producto" required>
-            </div>
-            <div class="mb-3">
-                <label for="description" class="form-label">Descripción</label>
-                <textarea class="form-control" id="description" name="product_description" placeholder="Ingrese la descripción" required>{{data.company.stockDTO.description}}</textarea>
-            </div>
-            <div class="mb-3">
-                <label for="value" class="form-label">Valor</label>
-                <input type="number" class="form-control" id="value" name="product_value" value="{{data.company.stockDTO.value}}" placeholder="Ingrese el valor" required>
-            </div>
-            <div class="mb-3">
-                <label for="inStorage" class="form-label">En Almacenamiento</label>
-                <input type="number" class="form-control" id="inStorage" name="product_in_storage" value="{{data.company.stockDTO.inStorage}}" placeholder="Ingrese la cantidad en almacenamiento" required>
-            </div>
-            <button type="submit" class="btn btn-primary w-100">{{#unless data.company.id}}Crear{{else}}Actualizar{{/unless}}</button>
+    .text-orange {
+        color: #FF8C00;
+        /* Usa aquí el tono de naranja de tu paleta */
+    }
+
+    .border-black {
+        border: 3px solid #020202;
+        /* Usa el color naranja de tu paleta */
+        padding: 15px;
+        /* Opcional: agrega espacio interior para que el contenido no quede pegado al borde */
+        border-radius: 8px;
+        /* Opcional: redondea las esquinas */
+    }
+</style>
+
+<div class="container mt-5">
+    <h1>{{data.message}}</h1>
+    <h2>CRUD de Empresa y Stock</h2>
+
+    <div class="col-md-4 mb-4">
+        <h4>Empresas Disponibles</h4>
+        <form action="/api/companies/deletecompany/{{data.user.id}}" method="post">
+            <select class="form-select mb-3" name="eliminar" required>
+                <option selected disabled>Seleccione una empresa</option>
+                {{#each data.companies}}
+                <option value="{{id}}">{{name}}</option>
+                {{/each}}
+            </select>
+            <button type="submit" class="btn btn-lg btn-primary w-100">Eliminar</button>
         </form>
+    </div>
 
-            <form action="/firstmodule/{{data.user.id}}" method="POST">
+    <div class="col-md-4 mb-4">
+        <h4>Editar Empresa</h4>
+        <form action="/api/companies/editcompany/{{data.user.id}}" method="post">
+            <select class="form-select mb-3" name="editar" required>
+                <option selected disabled>Seleccione una empresa</option>
+                {{#each data.companies}}
+                <option value="{{id}}">{{name}}</option>
+                {{/each}}
+            </select>
+            <button type="submit" class="btn btn-lg btn-primary w-100">Editar</button>
+        </form>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <h4>Mostrar Empresa</h4>
+        <form action="/api/companies/showcompany/{{data.user.id}}" method="post">
+            <select class="form-select mb-3" name="mostrar" required>
+                <option selected disabled>Seleccione una empresa</option>
+                {{#each data.companies}}
+                <option value="{{id}}">{{name}}</option>
+                {{/each}}
+            </select>
+            <button type="submit" class="btn btn-lg btn-primary w-100">Seleccionar</button>
+        </form>
+    </div>
+
+    <!-- Información de la empresa seleccionada -->
+    <div class="col-md-4 mb-4 border-black">
+        <h5 class="text-orange">ID: {{data.companyshow.id}}</h5>
+        <h5 class="text-orange">Nombre: {{data.companyshow.name}}</h5>
+        <p>País:{{data.companyshow.country}}</p>
+        <p>Ciudad: {{data.companyshow.city}}</p>
+        <p>StockID: {{data.companyshow.stockDTO.id}}</p>
+        <p>StockNombre: {{data.companyshow.stockDTO.name}}</p>
+        <p>Descripción: {{data.companyshow.stockDTO.description}}</p>
+        <p>Fecha: {{data.companyshow.stockDTO.date}}</p>
+        <p>amountSold: {{data.companyshow.stockDTO.amountSold}}</p>
+        <p>inStorage: {{data.companyshow.stockDTO.inStorage}}</p>
+    </div>
+
+
+    <!-- Formulario para crear o actualizar empresa y stock -->
+    <form
+        action="{{#unless data.company.id}}/api/companies/createcompany/{{data.user.id}}{{else}}/api/companies/update/{{data.user.id}}{{/unless}}"
+        method="post">
+        <h4>Valores de la Empresa</h4>
+
+        {{#if data.company.id}}
+        <div class="mb-3">
+            <label for="idcompany" class="form-label">ID de la Empresa</label>
+            <input type="text" class="form-control" id="idcompany" name="idcompany" value="{{data.company.id}}"
+                readonly>
+        </div>
+        {{/if}}
+
+        <div class="mb-3">
+            <label for="name" class="form-label">Nombre de la Empresa</label>
+            <input type="text" class="form-control" id="name" name="company_name" value="{{data.company.name}}"
+                required>
+        </div>
+        <div class="mb-3">
+            <label for="country" class="form-label">País</label>
+            <input type="text" class="form-control" id="country" name="company_country" value="{{data.company.country}}"
+                required>
+        </div>
+        <div class="mb-3">
+            <label for="city" class="form-label">Ciudad</label>
+            <input type="text" class="form-control" id="city" name="company_city" value="{{data.company.city}}"
+                required>
+        </div>
+
+        <h4>Valores de Stock</h4>
+
+        {{#if data.company.id}}
+        <div class="mb-3">
+            <label for="idstock" class="form-label">ID de la Acción</label>
+            <input type="text" class="form-control" id="idstock" name="idstock" value="{{data.company.stockDTO.id}}"
+                readonly>
+        </div>
+        {{/if}}
+
+        <div class="mb-3">
+            <label for="stockName" class="form-label">Nombre del Producto</label>
+            <input type="text" class="form-control" id="stockName" name="product_name"
+                value="{{data.company.stockDTO.name}}" required>
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Descripción</label>
+            <textarea class="form-control" id="description" name="product_description"
+                required>{{data.company.stockDTO.description}}</textarea>
+        </div>
+        <div class="mb-3">
+            <label for="value" class="form-label">Valor</label>
+            <input type="number" class="form-control" id="value" name="product_value"
+                value="{{data.company.stockDTO.value}}" required>
+        </div>
+        <div class="mb-3">
+            <label for="inStorage" class="form-label">En Almacenamiento</label>
+            <input type="number" class="form-control" id="inStorage" name="product_in_storage"
+                value="{{data.company.stockDTO.inStorage}}" required>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">{{#unless
+            data.company.id}}Crear{{else}}Actualizar{{/unless}}</button>
+    </form>
+
+    <form action="/firstmodule/{{data.user.id}}" method="POST">
         <button type="submit" class="btn btn-primary m-2">Volver</button>
     </form>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>

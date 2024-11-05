@@ -1,3 +1,74 @@
+<style>
+    /* Paleta de colores */
+    :root {
+        --orange-color: #ff6600;
+        --white-color: #ffffff;
+        --hover-orange: #ff8533;
+        --background-color: #f5f5f5;
+    }
+
+    /* Estilo general de la página */
+    body {
+        background-color: var(--background-color);
+    }
+
+    /* Estilo del contenedor principal */
+    .container {
+        background-color: var(--white-color);
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Títulos en color naranja */
+    h1,
+    h2,
+    h4 {
+        color: var(--orange-color);
+        text-align: center;
+    }
+
+    /* Estilo de botones */
+    .btn-primary {
+        background-color: var(--orange-color);
+        border: none;
+        color: var(--white-color);
+        font-weight: bold;
+    }
+
+    /* Hover para los botones */
+    .btn-primary:hover {
+        background-color: var(--hover-orange);
+    }
+
+    /* Estilos de formularios */
+    .form-label {
+        color: var(--orange-color);
+    }
+
+    /* Select de formularios */
+    .form-select,
+    .form-control {
+        background-color: var(--white-color);
+        border: 1px solid var(--orange-color);
+    }
+
+    .text-orange {
+        color: #FF8C00;
+        /* Usa aquí el tono de naranja de tu paleta */
+    }
+
+    .border-black {
+        border: 3px solid #020202;
+        /* Usa el color naranja de tu paleta */
+        padding: 15px;
+        /* Opcional: agrega espacio interior para que el contenido no quede pegado al borde */
+        border-radius: 8px;
+        /* Opcional: redondea las esquinas */
+    }
+</style>
+
+
 <div class="container mt-5">
     <h1 class="text-center">{{data.message}}</h1>
     <h2 class="text-center">CRUD de Inversionistas</h2>
@@ -12,10 +83,10 @@
                     <option value="{{id}}">{{name}}</option>
                 {{/each}}
             </select>
-            <button type="submit" class="btn btn-lg btn-danger">Eliminar</button>
+            <button type="submit" class="btn btn-lg btn-primary w-100">Eliminar</button>
         </form>
     </div>
-
+ <br>
     <!-- Formulario para editar inversionista -->
 <div class="col-md-4">
     <h4>Editar Inversionista</h4>
@@ -26,9 +97,10 @@
                 <option value="{{id}}">{{name}}</option>
             {{/each}}
         </select>
-        <button type="submit" class="btn btn-lg btn-warning">Cargar Datos</button>
+        <button type="submit" class="btn btn-lg btn-primary w-100">Cargar Datos</button>
     </form>
 </div>
+ <br>
     <!-- Formulario para mostrar inversionista -->
     <div class="col-md-4">
         <h4>Mostrar Inversionista</h4>
@@ -39,17 +111,16 @@
                     <option value="{{id}}">{{name}}</option>
                 {{/each}}
             </select>
-            <button type="submit" class="btn btn-lg btn-info">Seleccionar</button>
+            <button type="submit" class="btn btn-lg btn-primary w-100">Seleccionar</button>
         </form>
-    </div>
+    </div> <br>
 
     <!-- Visualización de inversionista seleccionado -->
- <div class="col-md-4">
-    <h3>ID: {{data.investorShow.id}}</h3>
-    <h3>Nombre: {{data.investorShow.name}}</h3>
+    <div class="col-md-4 mb-4 border-black">
+    <h5 class="text-orange">ID: {{data.investorShow.id}}</h5>
+    <h5 class="text-orange">Nombre: {{data.investorShow.name}}</h5>
     <p>Dirección: {{data.investorShow.address}}</p>
     <p>Teléfono: {{data.investorShow.phone}}</p>
-    <p>Email: {{data.investorShow.email}}</p>
     <p>Perfil de Riesgo: {{data.investorShow.riskProfile}}</p>
     <p>Capacidad de Inversión: {{data.investorShow.investmentCapacity}}</p>
     <p>Estado de Ganancias: 
@@ -59,8 +130,6 @@
             Sin definir
         {{/if}}
     </p>
-    <p>Lista de Acciones: {{data.investorShow.stockList}}</p>
-    <p>Contratos: {{data.investorShow.contracts}}</p>
 </div>
 
 

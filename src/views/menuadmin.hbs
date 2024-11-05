@@ -1,27 +1,79 @@
-<body class="d-flex justify-content-center align-items-center vh-100 bg-light">
+<style>
+    /* Definimos las variables para los colores */
+    :root {
+        --primary-color: #ff6600; /* Naranja */
+        --secondary-color: #ffffff; /* Blanco */
+        --highlight-color: #ff9900; /* Un tono más claro de naranja para destacar */
+        --background-color: #f5f1f1;
+        --card-body-background: #d8d4d4;
+    }
+
+    body {
+        background-color: var(--background-color);
+    }
+
+    .card {
+        background-color: var(--card-body-background);
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Estilo del botón naranja */
+    .btn-orange {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+        color: var(--secondary-color); /* Texto en blanco */
+    }
+
+    .btn-orange:hover {
+        background-color: var(--highlight-color);
+        border-color: var(--highlight-color);
+    }
+
+    /* Estilo del botón blanco */
+    .btn-white {
+        background-color: var(--secondary-color);
+        border-color: var(--secondary-color);
+        color: var(--primary-color); /* Texto en naranja */
+    }
+
+    .btn-white:hover {
+        background-color: #e0e0e0; /* Un tono gris claro para el hover */
+        border-color: #e0e0e0;
+    }
+
+    /* Estilo para el encabezado h3 */
+    .card-title {
+        color: var(--primary-color);
+        font-weight: bold;
+    }
+</style>
+
+
+<body class="d-flex justify-content-center align-items-center vh-100">
     <div class="card p-4 shadow" style="width: 100%; max-width: 400px;">
         <h3 class="card-title text-center mb-4">Andina Trading - Menú de Módulos</h3>
         <!-- Módulo Gestión del Sistema -->
         <form action="/firstmodule/{{user.id}}" method="post" class="mb-3">
-            <button type="submit" class="btn btn-primary w-100">1. Gestión del Sistema</button>
+            <button type="submit"  class="btn btn-orange w-100">1. Gestión del Sistema</button>
         </form>
         
         <!-- Módulo de Conexión con la Bolsa de Valores -->
         <form action="/api/secondmodule/module/{{user.id}}" method="post" class="mb-3">
-            <button type="submit" class="btn btn-secondary w-100">2. Conexión con la Bolsa de Valores</button>
+            <button type="submit" class="btn btn-white w-100">2. Conexión con la Bolsa de Valores</button>
         </form>
 
         <!-- Módulo de Consolidación de Información -->
         <form action="/api/sixthmodule/crud/{{user.id}}" method="post" class="mb-3">
-            <button type="submit" class="btn btn-danger w-100">6. Consolidación de Información</button>
+            <button type="submit" class="btn btn-orange w-100">6. Consolidación de Información</button>
         </form>
         
         <!-- Módulo de Reportes -->
         <form action="/reports/{{user.id}}" method="post" class="mb-3">
-            <button type="submit" class="btn btn-dark w-100">7. Reportes</button>
+            <button type="submit" class="btn btn-white w-100">7. Reportes</button>
         </form>
 
-            <a href="/" class="btn btn-secondary w-100">Back</a>
+            <a href="/" class="btn btn-orange w-100">Back</a>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

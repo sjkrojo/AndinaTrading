@@ -1,87 +1,174 @@
+<style>
+    :root {
+        --primary-color: #ff6600;
+        --secondary-color: #ffffff;
+        --highlight-color: #ff9900;
+        --background-color: #f7f7f7;
+        --card-body-background: #e0e0e0;
+        --list-group-background: #ffffff;
+        --list-group-item-background: #f0f0f0;
+        --list-group-item-hover: #e6e6e6;
+    }
+
+    header.bg-primary {
+        background-color: var(--primary-color) !important;
+    }
+
+    header.text-white {
+        color: var(--secondary-color) !important;
+    }
+
+    .btn-primary {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+
+    .btn-outline-secondary {
+        color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+
+    .btn-outline-secondary:hover {
+        background-color: var(--primary-color);
+        color: var(--secondary-color);
+    }
+
+    .card-header.bg-primary {
+        background-color: var(--primary-color) !important;
+        color: var(--secondary-color) !important;
+    }
+
+    .card-header.bg-success,
+    .card-header.bg-warning {
+        background-color: var(--highlight-color) !important;
+        color: var(--secondary-color) !important;
+    }
+
+    .card-header.bg-info {
+        background-color: var(--primary-color) !important;
+        color: var(--secondary-color) !important;
+    }
+
+    .card-body {
+        background-color: var(--card-body-background) !important;
+        color: black;
+    }
+
+    body {
+        background-color: var(--background-color);
+    }
+
+    .list-group {
+        background-color: var(--list-group-background);
+    }
+
+    .list-group-item {
+        background-color: var(--list-group-item-background);
+        color: black;
+    }
+
+    .list-group-item:hover {
+        background-color: var(--list-group-item-hover);
+    }
+
+    .text-primary {
+        color: var(--primary-color) !important;
+    }
+
+    .text-secondary {
+        color: var(--secondary-color) !important;
+    }
+</style>
+
+
+
+<header class="bg-primary text-white text-center py-3 mb-4">
+    <h1>Andina Trading</h1>
+    <p>Su plataforma de comercio y transacciones financieras</p>
+</header>
+
 <div class="container mt-5">
     <!-- Botón de Login -->
     <div class="row mb-4">
-
         {{#unless data.user.id}}
-        <div class="col text-end">
+        <div class="col text-end d-flex align-items-center justify-content-end">
+            <p class="mb-0 me-2">Si ya tienes cuenta inicia sesión</p>
             <a href="/lg" class="btn btn-outline-secondary">Login</a>
         </div>
-        {{else}}
 
+        {{else}}
         <form action="/backtomenu/{{data.user.id}}" method="post" class="mb-3">
             <button type="submit" class="btn btn-secondary w-100">Volver</button>
         </form>
-
-    
         {{/unless}}
     </div>
 
-    <div class="row">
-        <!-- Panel de Selección de País y Ciudad -->
-        <div class="col-md-4 mb-4">
-            <div class="card shadow">
-                <div class="card-header bg-primary text-white text-center">
-                    Selección de País y Ciudad
-                </div>
-                <div class="card-body">
-                    <form
-                        action="{{#unless data.user.id}}/api/secondmodule/loadstocks{{else}}/api/secondmodule/loadstocks/{{data.user.id}}{{/unless}}"
-                        method="post">
-                        <div class="mb-3">
-                            <label for="pais" class="form-label">País y Ciudad</label>
-                            <select class="form-select" id="pais" name="pais" required>
-                                <option selected disabled>Seleccione un país</option>
-                                {{#each data.countries}}
-                                <option value="{{id}}">{{countryName}}, {{cityName}}</option>
-                                {{/each}}
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100">Mostrar Resultados</button>
-                    </form>
-                </div>
+  <div class="row">
+    <!-- Panel de Selección de País y Ciudad -->
+    <div class="col-md-4 mb-4">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white text-center">
+                Selección de País y Ciudad
+            </div>
+            <div class="card-body">
+                <form id="countryCityForm" onsubmit="return validateForm()"
+                    action="{{#unless data.user.id}}/api/secondmodule/loadstocks{{else}}/api/secondmodule/loadstocks/{{data.user.id}}{{/unless}}"
+                    method="post">
+                    <div class="mb-3">
+                        <label for="pais" class="form-label">País y Ciudad</label>
+                        <select class="form-select" id="pais" name="pais" required>
+                            <option selected disabled>Seleccione un país</option>
+                            {{#each data.countries}}
+                            <option value="{{id}}">{{countryName}}, {{cityName}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100" id="countrySubmitBtn">Mostrar Resultados</button>
+                </form>
             </div>
         </div>
+    </div>
 
-        <!-- Panel de Transacciones en Tiempo Real -->
-        <div class="col-md-4 mb-4">
-            <div class="card shadow">
-                <div class="card-header bg-success text-white text-center">
-                    Transacciones en Tiempo Real
-                </div>
-                <div class="card-body">
-                    <ul class="list-group" id="transacciones">
-                        <li class="list-group-item">Compra de 100 acciones - Empresa X</li>
-                        <li class="list-group-item">Venta de 50 acciones - Empresa Y</li>
-                        <li class="list-group-item">Compra de 200 acciones - Empresa Z</li>
-                    </ul>
-                </div>
+    <!-- Panel de Transacciones en Tiempo Real -->
+    <div class="col-md-4 mb-4">
+        <div class="card shadow">
+            <div class="card-header bg-success text-white text-center">
+                Transacciones en Tiempo Real
+            </div>
+            <div class="card-body">
+                <ul class="list-group" id="transacciones">
+                    <li class="list-group-item">Compra de 100 acciones - Empresa X</li>
+                    <li class="list-group-item">Venta de 50 acciones - Empresa Y</li>
+                    <li class="list-group-item">Compra de 200 acciones - Empresa Z</li>
+                </ul>
             </div>
         </div>
+    </div>
 
-        <!-- Panel de Selección de Acciones Disponibles -->
-        <div class="col-md-4 mb-4">
-            <div class="card shadow">
-                <div class="card-header bg-info text-white text-center">
-                    Selección de Acciones Disponibles
-                </div>
-                <div class="card-body">
-                    <form id="actionForm" name="accion"
-                        action="{{#unless data.user.id}}/api/secondmodule/selectaction {{else}}/api/secondmodule/selectaction/{{data.user.id}}{{/unless}}"
-                        method="POST">
-                        {{#each data.stocks}}
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="accion" id="accion{{stockDTOid}}"
-                                value="{{stockDTO.id}}" required>
-                            <label class="form-check-label" for="accion{{stockDTOid}}">
-                                Compañía: {{company}} - Acción: {{name}} (Disponible: {{stockDTO.inStorage}})
-                            </label>
-                        </div>
-                        {{/each}}
-                        <button type="submit" class="btn btn-primary m-2">Enviar selección</button>
-                    </form>
-                </div>
+    <!-- Panel de Selección de Acciones Disponibles -->
+    <div class="col-md-4 mb-4">
+        <div class="card shadow">
+            <div class="card-header bg-info text-white text-center">
+                Selección de Acciones Disponibles
+            </div>
+            <div class="card-body">
+                <form id="actionForm" name="accion"
+                    action="{{#unless data.user.id}}/api/secondmodule/selectaction {{else}}/api/secondmodule/selectaction/{{data.user.id}}{{/unless}}"
+                    method="POST">
+                    {{#each data.stocks}}
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="accion" id="accion{{stockDTOid}}"
+                            value="{{stockDTO.id}}" required>
+                        <label class="form-check-label" for="accion{{stockDTOid}}">
+                            Compañía: {{company}} - Acción: {{name}} (Disponible: {{stockDTO.inStorage}})
+                        </label>
+                    </div>
+                    {{/each}}
+                    <button type="submit" class="btn btn-primary m-2" id="actionSubmitBtn" disabled>Enviar selección</button>
+                </form>
             </div>
         </div>
+    </div>
 
         {{#if data.selectedStock.id}}
         <!-- Panel de Información de la Acción Seleccionada -->
@@ -92,7 +179,7 @@
                 </div>
                 <div class="card-body">
                     <form
-                        action="{{#unless data.user.id}}/api/secondmodule/buystock{{else}}/api/secondmodule/buystock/{{data.user.id}}{{/unless}} "
+                        action="{{#unless data.user.id}}/api/secondmodule/buystock{{else}}/api/secondmodule/buystock/{{data.user.id}}{{/unless}}"
                         method="post">
                         <input type="hidden" name="accionid" value="{{data.selectedStock.id}}">
                         <p><strong>Compañía:</strong> {{data.selectedStock.company}}</p>
@@ -109,5 +196,38 @@
     </div>
 </div>
 
+<script>
+    // Función para validar el formulario de país y ciudad
+    function validateForm() {
+        var selectElement = document.getElementById("pais");
+
+        // Verifica si no se ha seleccionado ninguna opción válida
+        if (selectElement.value === "Seleccione un país" || selectElement.value === "") {
+            alert("Por favor, seleccione un país antes de continuar.");
+            return false; // Prevenir el envío del formulario
+        }
+
+        // Si se seleccionó un país, permitir el envío del formulario
+        return true;
+    }
+    // Habilitar el botón "Enviar selección" solo si se ha seleccionado un país
+    document.getElementById("actionForm").addEventListener("submit", function() {
+        var paisSelect = document.getElementById("pais");
+        var actionSubmitBtn = document.getElementById("actionSubmitBtn");
+
+       
+            actionSubmitBtn.disabled = false; // Habilitar el botón si hay selección válida
+        
+    });
+    // Habilitar el botón "Enviar selección" cuando se elige una acción
+    var radioButtons = document.querySelectorAll('input[name="accion"]');
+    radioButtons.forEach(function(radio) {
+        radio.addEventListener("change", function() {
+            var actionSubmitBtn = document.getElementById("actionSubmitBtn");
+            actionSubmitBtn.disabled = false; // Habilitar el botón al seleccionar una acción
+        });
+    });
+</script>
 <!-- Bootstrap JS and dependencies -->
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>

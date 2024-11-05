@@ -1,4 +1,162 @@
-<body class="bg-light">
+<style>
+    /* Colores principales */
+    :root {
+        --color-naranja-claro: #FFA500;
+        /* Naranja claro */
+        --color-naranja: #FF8C00;
+        /* Naranja más oscuro */
+        --color-naranja-oscuro: #FF4500;
+        /* Naranja oscuro */
+    }
+
+    /* Estilos generales */
+    body {
+        font-family: Arial, sans-serif;
+        background-color: var(--color-gris-claro);
+        color: var(--color-naranja-oscuro);
+    }
+
+    /* Encabezados */
+    h2 {
+        color: var(--color-naranja);
+    }
+
+    .card {
+        border: 1px solid #000000;
+        /* Cambia a borde negro */
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        background-color: var(--color-blanco);
+    }
+
+    /* Encabezados de tarjetas */
+    .card-header {
+        background-color: var(--color-naranja);
+        color: var(--color-blanco);
+        font-weight: bold;
+    }
+
+    /* Botones */
+    .btn {
+        border-radius: 5px;
+        font-weight: bold;
+    }
+
+    .btn-warning {
+        background-color: var(--color-naranja);
+        color: var(--color-blanco);
+    }
+
+    .btn-warning:hover {
+        background-color: var(--color-naranja-claro);
+    }
+
+    .btn-secondary {
+        background-color: var(--color-gris-claro);
+        color: var(--color-naranja-oscuro);
+    }
+
+    .btn-secondary:hover {
+        background-color: var(--color-naranja-claro);
+    }
+
+    /* Listas */
+    .list-group-item {
+        border: none;
+        padding: 10px;
+    }
+
+    /* Mensajes de error */
+    .text-danger {
+        color: #dc3545;
+        /* Rojo para mensajes de error */
+    }
+
+
+    .form-control {
+        border: 1px solid black;
+        /* Cambiado a negro */
+    }
+
+    .form-select {
+        border: 1px solid black;
+        /* Cambiado a negro */
+    }
+
+
+    /* Estilos para gráficos */
+    #stockPriceChart {
+        background-color: var(--color-blanco);
+    }
+
+    /* Espaciados y márgenes */
+    .mt-5 {
+        margin-top: 3rem !important;
+    }
+
+    .mb-3 {
+        margin-bottom: 1rem !important;
+    }
+
+    .mb-4 {
+        margin-bottom: 1.5rem !important;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    /* Estilos para la lista de acciones en cartera */
+    #portfolio {
+        background-color: #FFFFFF;
+        /* Fondo blanco */
+        padding: 1rem;
+        /* Espaciado interno */
+        border: 1px solid #000000;
+        /* Borde negro */
+        border-radius: 8px;
+        /* Bordes redondeados */
+    }
+
+    /* Estilo para los elementos de la lista */
+    #portfolio .list-group-item {
+        background-color: #FFFFFF;
+        /* Fondo blanco para los elementos de la lista */
+        color: #000000;
+        /* Letra negra */
+        border: 1px solid #000000;
+        /* Borde negro */
+        margin-bottom: 0.5rem;
+        /* Espaciado entre elementos */
+        padding: 10px;
+        /* Espaciado interno */
+    }
+
+    /* Estilo para la última lista para no tener margen inferior */
+    #portfolio .list-group-item:last-child {
+        margin-bottom: 0;
+        /* Elimina margen inferior para el último elemento */
+    }
+
+    .btn-black {
+        background-color: #353434;
+        /* Fondo negro */
+        color: #FFFFFF;
+        /* Texto blanco */
+        border: 1px solid #000000;
+        /* Borde negro */
+    }
+
+    .btn-black:hover {
+        background-color: #5f5c5c;
+        /* Color de fondo al pasar el mouse */
+        color: #FFFFFF;
+        /* Mantiene el texto blanco */
+    }
+    
+</style>
+
+<body>
 
     <div class="container mt-5">
         <h2 class="text-center mb-4">Portal de Inversionista</h2>
@@ -118,9 +276,11 @@
             <form action="/api/secondmodule/module/{{user.id}}" method="post" class="mb-3">
                 <button type="submit" class="btn btn-info w-100">Ver Bolsa de Valores</button>
             </form>
-            <a href="/" class="btn btn-secondary w-100">Back</a>
+            <a href="/" class="btn btn-black w-100">Back</a>
         </div>
     </div>
+    <br>
+    <br>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
@@ -227,7 +387,3 @@
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script>
-        // Placeholder JavaScript for handling chart generation and data fetching can be added here
-    </script>

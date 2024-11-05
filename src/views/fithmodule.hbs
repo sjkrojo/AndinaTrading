@@ -1,6 +1,73 @@
-<body class="d-flex justify-content-center align-items-center vh-100 bg-light">
-    <div class="card p-4 shadow" style="width: 100%; max-width: 600px;">
-        <h3 class="card-title text-center mb-4">Andina Trading - Trading Contracts</h3>
+<style>
+:root {
+    --primary-color: #ff6600; /* Naranja */
+    --secondary-color: #ffffff; /* Blanco */
+    --highlight-color: #ff9900; /* Un tono más claro de naranja para destacar */
+    --background-color: #f7f7f7; /* Un gris claro para el fondo */
+    --card-body-background: #e0e0e0; /* Gris claro para el fondo de las tarjetas */
+}
+
+/* Encabezado */
+header.bg-primary {
+    background-color: var(--primary-color) !important;
+}
+header.text-white {
+    color: var(--secondary-color) !important;
+}
+
+/* Botones */
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+.btn-outline-secondary {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+.btn-outline-secondary:hover {
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+}
+
+/* Paneles */
+.card-header.bg-primary {
+    background-color: var(--primary-color) !important;
+    color: var(--secondary-color) !important;
+}
+.card-header.bg-info, .card-header.bg-success, .card-header.bg-warning {
+    background-color: var(--highlight-color) !important;
+    color: var(--secondary-color) !important;
+}
+.card-body {
+    background-color: var(--card-body-background) !important;
+}
+
+/* Fondo */
+body {
+    background-color: var(--background-color);
+}
+
+/* Otros estilos */
+.text-primary {
+    color: var(--primary-color) !important;
+}
+.text-secondary {
+    color: var(--secondary-color) !important;
+}
+
+/* Estilo para el primer card */
+.card-white {
+    background-color: var(--secondary-color) !important; /* Fondo blanco */
+}
+
+.card-title-orange {
+    color: var(--primary-color); /* Color naranja */
+}
+
+</style>
+<body class="d-flex justify-content-center align-items-center vh-100">
+    <div class="card p-4 shadow card-white" style="width: 100%; max-width: 600px;">
+<h3 class="card-title text-center mb-4 card-title-orange">Andina Trading - Trading Contracts</h3>
 
         <!-- Back Button -->
         <div class="text-start mb-3">

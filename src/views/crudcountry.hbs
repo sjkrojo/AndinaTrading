@@ -1,81 +1,158 @@
- <div class="container mt-5">
-        <h1 class="text-center">{{data.message}}</h1>
-        <h2 class="text-center">CRUD de Paises y Ciudades</h2>
+<style>
+    /* Paleta de colores */
+    :root {
+        --orange-color: #ff6600;
+        --white-color: #ffffff;
+        --hover-orange: #ff8533;
+        --background-color: #f5f5f5;
+    }
 
-        <div class="col-md-4">
-            <h4>Paises Disponibles</h4>
-            <form action="/api/countries/deletecountry/{{data.user.id}}" method="post">
-                <select class="form-select mb-3" name="eliminar" required>
-                    <option selected disabled>Seleccione un pais y su ciudad</option>
-                    {{#each data.countries}}
-                         <option value="{{id}}">{{countryName}}, {{cityName}}</option>
-                    {{/each}}
-                </select>
-                <button type="submit" class="btn btn-lg btn-primary">Eliminar</button>
-            </form>
-        </div>
-        
-        <div class="col-md-4">
-            <h4>Editar Pais y Ciudad</h4>
-            <form action="/api/countries/editcountry/{{data.user.id}}" method="post">
-                <select class="form-select mb-3" name="editar" required>
-                    <option selected disabled>Seleccione un pais y su ciudad</option>
-                    {{#each data.countries}}
-                         <option value="{{id}}">{{countryName}}, {{cityName}}</option>
-                    {{/each}}
-                </select>
-                <button type="submit" class="btn btn-lg btn-primary">Editar</button>
-            </form>
-        </div>
+    /* Estilo general de la página */
+    body {
+        background-color: var(--background-color);
+    }
 
-        <div class="col-md-4">
-            <h4>Mostrar Pais y Ciudad</h4>
-            <form action="/api/countries/showcountry/{{data.user.id}}" method="post">
-                <select class="form-select mb-3" name="mostrar" required>
-                    <option selected disabled>Seleccione un pais y su ciudad</option>
-                    {{#each data.countries}}
-                         <option value="{{id}}">{{countryName}}, {{cityName}}</option>
-                    {{/each}}
-                </select>
-                <button type="submit" class="btn btn-lg btn-primary">Seleccionar</button>
-            </form>
-        </div>
+    /* Estilo del contenedor principal */
+    .container {
+        background-color: var(--white-color);
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
 
-        <div class="col-md-4">
-        <h3>{{data.countryshow.id}}</h3>
-        <h3>{{data.countryshow.countryName}}</h3>
-        <p>{{data.countryshow.cityName}}</p>
-        <p>{{data.countryshow.economicSituation}}</p>
-        </div>
+    /* Títulos en color naranja */
+    h1,
+    h2,
+    h4 {
+        color: var(--orange-color);
+        text-align: center;
+    }
 
-        <form action="{{#unless data.country.id}}/api/countries/createcountry/{{data.user.id}}{{else}}/api/countries/update/{{data.user.id}}{{/unless}}" method="post">
-            <h4>Valores de la Empresa</h4>
+    /* Estilo de botones */
+    .btn-primary {
+        background-color: var(--orange-color);
+        border: none;
+        color: var(--white-color);
+        font-weight: bold;
+    }
 
-            {{#if data.country.id}}
-                <div class="mb-3">
-                 <label for="name" class="form-label">ID de la locación</label>
-                 <input type="text" class="form-control" id="idcountry" name="idcountry" value="{{data.country.id}}" placeholder="" required readonly>
-                </div>
-            {{/if}}
+    /* Hover para los botones */
+    .btn-primary:hover {
+        background-color: var(--hover-orange);
+    }
 
-            <div class="mb-3">
-                <label for="name" class="form-label">Nombre del Pais</label>
-                <input type="text" class="form-control" id="country_name" name="country_name" value="{{data.country.countryName}}" placeholder="Ingrese el nombre de la empresa" required>
-            </div>
-            <div class="mb-3">
-                <label for="country" class="form-label">País</label>
-                <input type="text" class="form-control" id="country_city" name="country_city" value="{{data.country.cityName}}" placeholder="Ingrese el país" required>
-            </div>
-            <div class="mb-3">
-                <label for="description" class="form-label">Descripción de la situación economica</label>
-                <textarea class="form-control" id="country_description" name="country_description" placeholder="Ingrese la descripción" required>{{data.country.economicSituation}}</textarea>
-            </div>
-            <button type="submit" class="btn btn-primary w-100">{{#unless data.country.id}}Crear{{else}}Actualizar{{/unless}}</button>
+    /* Estilos de formularios */
+    .form-label {
+        color: var(--orange-color);
+    }
+
+    /* Select de formularios */
+    .form-select,
+    .form-control {
+        background-color: var(--white-color);
+        border: 1px solid var(--orange-color);
+    }
+
+    .text-orange {
+        color: #FF8C00;
+        /* Usa aquí el tono de naranja de tu paleta */
+    }
+
+    .border-black {
+        border: 3px solid #020202;
+        /* Usa el color naranja de tu paleta */
+        padding: 15px;
+        /* Opcional: agrega espacio interior para que el contenido no quede pegado al borde */
+        border-radius: 8px;
+        /* Opcional: redondea las esquinas */
+    }
+</style>
+
+<div class="container mt-5">
+    <h1 class="text-center">{{data.message}}</h1>
+    <h2 class="text-center">CRUD de Paises y Ciudades</h2>
+
+    <div class="col-md-4">
+        <h4>Paises Disponibles</h4>
+        <form action="/api/countries/deletecountry/{{data.user.id}}" method="post">
+            <select class="form-select mb-3" name="eliminar" required>
+                <option selected disabled>Seleccione un pais y su ciudad</option>
+                {{#each data.countries}}
+                <option value="{{id}}">{{countryName}}, {{cityName}}</option>
+                {{/each}}
+            </select>
+            <button type="submit" class="btn btn-lg btn-primary w-100">Eliminar</button>
         </form>
+    </div>
+    <br>
+    <div class="col-md-4">
+        <h4>Editar Pais y Ciudad</h4>
+        <form action="/api/countries/editcountry/{{data.user.id}}" method="post">
+            <select class="form-select mb-3" name="editar" required>
+                <option selected disabled>Seleccione un pais y su ciudad</option>
+                {{#each data.countries}}
+                <option value="{{id}}">{{countryName}}, {{cityName}}</option>
+                {{/each}}
+            </select>
+            <button type="submit" class="btn btn-lg btn-primary w-100">Editar</button>
+        </form>
+    </div>
+    <br>
+    <div class="col-md-4">
+        <h4>Mostrar Pais y Ciudad</h4>
+        <form action="/api/countries/showcountry/{{data.user.id}}" method="post">
+            <select class="form-select mb-3" name="mostrar" required>
+                <option selected disabled>Seleccione un pais y su ciudad</option>
+                {{#each data.countries}}
+                <option value="{{id}}">{{countryName}}, {{cityName}}</option>
+                {{/each}}
+            </select>
+            <button type="submit" class="btn btn-lg btn-primary w-100">Seleccionar</button>
+        </form>
+    </div>
+    <br>
+    <div class="col-md-4 mb-4 border-black">
+        <h5 class="text-orange">ID: {{data.countryshow.id}}</h5>
+        <h5 class="text-orange">País: {{data.countryshow.countryName}}</h5>
+        <p>Ciudad: {{data.countryshow.cityName}}</p>
+        <p>situación económica: {{data.countryshow.economicSituation}}</p>
+    </div>
+    <br>
+    <form
+        action="{{#unless data.country.id}}/api/countries/createcountry/{{data.user.id}}{{else}}/api/countries/update/{{data.user.id}}{{/unless}}"
+        method="post">
+        <h4>Valores de la Empresa</h4>
 
-            <form action="/firstmodule/{{data.user.id}}" method="POST">
+        {{#if data.country.id}}
+        <div class="mb-3">
+            <label for="name" class="form-label">ID de la locación</label>
+            <input type="text" class="form-control" id="idcountry" name="idcountry" value="{{data.country.id}}"
+                placeholder="" required readonly>
+        </div>
+        {{/if}}
+
+        <div class="mb-3">
+            <label for="name" class="form-label">Nombre del Pais</label>
+            <input type="text" class="form-control" id="country_name" name="country_name"
+                value="{{data.country.countryName}}" placeholder="Ingrese el nombre de la empresa" required>
+        </div>
+        <div class="mb-3">
+            <label for="country" class="form-label">País</label>
+            <input type="text" class="form-control" id="country_city" name="country_city"
+                value="{{data.country.cityName}}" placeholder="Ingrese el país" required>
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Descripción de la situación económica</label>
+            <textarea class="form-control" id="country_description" name="country_description"
+                placeholder="Ingrese la descripción" required>{{data.country.economicSituation}}</textarea>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">{{#unless
+            data.country.id}}Crear{{else}}Actualizar{{/unless}}</button>
+    </form>
+
+    <form action="/firstmodule/{{data.user.id}}" method="POST">
         <button type="submit" class="btn btn-primary m-2">Volver</button>
     </form>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
 </body>

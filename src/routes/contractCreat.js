@@ -43,7 +43,7 @@ router.post('/creacionContrato', async (req, res) => {
     investor = await investorDAO.createInvestor({ name, address, phone, investmentCapacity });
     console.log(houseshow);
     console.log(investor);
-    await tradingContractDAO.createTradingContract(accion.id, expirationDate, terms, false, amount, type, houseshow, investor);
+    await tradingContractDAO.createTradingContract(accion.id, expirationDate, terms, false, amount, type, houseshow.id, investor);
 
     res.render('secondmodule');
 
@@ -63,7 +63,7 @@ router.post('/creacionContrato/:id', async (req, res) => {
     console.log(houseshow);
     console.log(investor);
 
-    await tradingContractDAO.createTradingContract(accion.id, expirationDate, terms, false, amount, type, houseshow, investor);
+    await tradingContractDAO.createTradingContract(accion.id, expirationDate, terms, false, amount, type, houseshow.id, investor);
 
 
     const countries = await countryDAO.getAllCountries();
