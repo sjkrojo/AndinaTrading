@@ -79,14 +79,11 @@ router.post('/buyStock/:id', async (req, res) => {
     const houses = await securityhouseDAO.getSecurityHouses();
 
     const selectedStock = await stockDAO.getStockById(accionid);
-    console.log("selectedStock" , selectedStock);
     const companyInfo = await companyDAO.getCompanyByName(selectedStock.company);
 
+    const countryid = await countryDAO.getCountryIdByNameAndCity(companyInfo.name, companyInfo.country)
     // Filtrar las casas de seguridad según el país y la ciudad de companyInfo
-    const filteredHouses = houses.filter(house =>
-        house.location.country.trim() === companyInfo.name.trim() &&
-        house.location.city.trim() === companyInfo.country.trim()
-    );
+    const filteredHouses= await securityhouseDAO.getSecurityHousesByLocation(countryid);
     
     const data = {
         user: user,
@@ -156,12 +153,9 @@ router.post('/buyStock/', async (req, res) => {
    
     const selectedStock = await stockDAO.getStockById(accionid);
     const companyInfo = await companyDAO.getCompanyByName(selectedStock.company);
-
+    const countryid = await countryDAO.getCountryIdByNameAndCity(companyInfo.name, companyInfo.country)
     // Filtrar las casas de seguridad según el país y la ciudad de companyInfo
-    const filteredHouses = houses.filter(house =>
-        house.location.country.trim() === companyInfo.name.trim() &&
-        house.location.city.trim() === companyInfo.country.trim()
-    );
+    const filteredHouses= await securityhouseDAO.getSecurityHousesByLocation(countryid);
     
     
     const data = {

@@ -71,6 +71,23 @@ class SecurityHouseDAO {
     return new SecurityHouseDTO(doc.id, data.name, data.location, []); // Retornar un DTO
   }
 
+  // Obtener security houses por ubicación
+  async getSecurityHousesByLocation(location) {
+    const querySnapshot = await this.collection
+      .where('location', '==', location) // location es un string
+      .get();
+
+    return querySnapshot.docs.map(doc => {
+      const data = doc.data();
+      return new SecurityHouseDTO(
+        doc.id,
+        data.name,
+        data.location,
+        [] // Asumir que los contratos de trading están vacíos por ahora
+      );
+    });
+  }
+
   // Actualizar una security house
   async updateSecurityHouse(id, name, location) {
     const updatedData = {
@@ -89,5 +106,7 @@ class SecurityHouseDAO {
     return `Security house with ID ${id} has been deleted.`;
   }
 }
+
+
 
 module.exports = SecurityHouseDAO;

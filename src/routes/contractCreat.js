@@ -101,11 +101,9 @@ router.post('/ventaContrato/:id', async (req, res) => {
     // Obtener información del inversionista usando el tipo de ID del usuario
     const investor = await investorDAO.getInvestorById(usersecu.idtype);
 
-    // Filtrar las casas de seguridad para seleccionar solo aquellas que están en el país y ciudad especificados por la empresa
-    const filteredHouses = houses.filter(house =>
-        house.location.country.trim() === companyInfo.name.trim() &&
-        house.location.city.trim() === companyInfo.country.trim()
-    );
+    const countryid = await countryDAO.getCountryIdByNameAndCity(companyInfo.name, companyInfo.country)
+    // Filtrar las casas de seguridad según el país y la ciudad de companyInfo
+    const filteredHouses= await securityHouseDAO.getSecurityHousesByLocation(countryid);
 
     // Obtener solo los IDs de las casas de seguridad filtradas
     const houseIds = filteredHouses.map(house => house.id);

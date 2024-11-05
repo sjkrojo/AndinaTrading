@@ -48,23 +48,23 @@ async createStockForInvestor(investorId, quantity, originalPrice, actualPrice, s
     );
   }
 
-  // Get a stock by ID
-  async getStockById(id) {
-    const doc = await this.collection.doc(id).get();
-    return doc.exists
-      ? new StockDTO(
-          doc.id,
-          doc.data().name,
-          doc.data().description,
-          doc.data().date.toDate(),
-          doc.data().value,
-          doc.data().company,
-          doc.data().amountSold,
-          doc.data().inStorage,
-          doc.data().historicalData
-        )
+// Get a stock by ID
+async getStockById(id) {
+  const doc = await this.collection.doc(id).get();
+  return doc.exists
+      ? {
+          id: doc.id,
+          name: doc.data().name,
+          description: doc.data().description,
+          date: doc.data().date.toDate(), // Asegúrate de que date sea un objeto Date o lo que necesites
+          value: doc.data().value,
+          company: doc.data().company,
+          amountSold: doc.data().amountSold,
+          inStorage: doc.data().inStorage,
+          historicalData: doc.data().historicalData
+      }
       : null;
-  }
+}
 
 // Function to check if a stock name is already in use
 async isStockNameInUse(name) {

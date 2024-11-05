@@ -57,6 +57,22 @@ class CountryDAO {
         return { message: `Country with ID ${countryId} deleted successfully` };
     }
 
+    // Function to get country ID by country name and city name
+    async getCountryIdByNameAndCity(countryName, cityName) {
+        const snapshot = await this.collection
+            .where('countryName', '==', countryName)
+            .where('cityName', '==', cityName)
+            .get();
+
+        if (snapshot.empty) {
+            throw new Error(`Country with name "${countryName}" and city "${cityName}" not found`);
+        }
+
+        // Assuming that country names and city names are unique combinations
+        const doc = snapshot.docs[0]; // Get the first matching document
+        return doc.id; // Return the ID of the found document
+    }
+
     // Function to check if a country name is already in use
 async isCountryNameInUse(countryName) {
     const snapshot = await this.collection.where('countryName', '==', countryName).get();
@@ -69,5 +85,7 @@ async isCountryNameInUse(countryName) {
     return !snapshot.empty; // Returns true if a document with this city name exists
   }
 }
+
+
 
 module.exports = CountryDAO;

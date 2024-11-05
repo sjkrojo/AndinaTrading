@@ -82,7 +82,7 @@ class GeneratePDFReport {
 
             case 'Reporte de Comisionistas':
                 const comisionistas = await securityHouseDAO.getSecurityHouses();
-                return comisionistas.filter(house => house.location.country === filters.country);
+                return comisionistas.filter(house => house.location === filters.country);
 
             case 'Valor de la Acción':
                 return await stockDAO.getStocks();
