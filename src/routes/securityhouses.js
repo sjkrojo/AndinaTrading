@@ -1,7 +1,8 @@
 const { Router } = require('express');
 const securityHouseDAO = require('../controller/securityhousedao');
 const CountryDAO = require('../controller/countrydao');
-
+const LogsDAO = require('../controller/logdao');
+const logsdao = new LogsDAO();
 
 const countryDAO = new CountryDAO();
 const router = Router();
@@ -69,6 +70,11 @@ router.post('/createhouse/:id', async (req, res) => {
         countries: countries,
         houses: houses
     }
+
+        // Log de creación de casa de seguridad
+        logsdao.createLog("CREATE_HOUSE", "Crear casa de seguridad", new Date(), `Usuario ${user.id} creó la casa de seguridad ${house_name}.`);
+
+
     res.render('crudsecurityhouse',  {data})
     }
 })
@@ -77,7 +83,6 @@ router.post('/deletehouse/:id', async (req, res) => {
 
     const  user  = req.params;
     const { eliminar } = req.body;
-    console.log(eliminar);
     const countries = await countryDAO.getAllCountries();
     const deletehouse = await securityHousesDAO.deleteSecurityHouse(eliminar);
     const houses = await securityHousesDAO.getSecurityHouses();
@@ -86,6 +91,10 @@ router.post('/deletehouse/:id', async (req, res) => {
         countries: countries,
         houses: houses
     }
+
+    // Log de eliminación de casa de seguridad
+    logsdao.createLog("DELETE_HOUSE", "Eliminar casa de seguridad", new Date(), `Usuario ${user.id} eliminó la casa de seguridad ${eliminar}.`);
+
     res.render('crudsecurityhouse', {data})
 
 })
@@ -131,6 +140,9 @@ router.post('/update/:id', async (req, res) => {
         countries: countries,
         houses: houses
     }
+
+    // Log de actualización de casa de seguridad
+    logsdao.createLog("UPDATE_HOUSE", "Actualizar casa de seguridad", new Date(), `Usuario ${user.id} actualizó la casa de seguridad ${house_name}.`);
     res.render('crudsecurityhouse',  {data})
 }
 })

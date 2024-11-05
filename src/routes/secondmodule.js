@@ -5,7 +5,8 @@ const StockDAO = require('../controller/stockdao');
 const SecurityHouseDAO = require('../controller/securityhousedao');
 const UserDAO = require('../controller/userdao');
 const InvestorDAO = require('../controller/investordao');
-
+const LogsDAO = require('../controller/logdao');
+const logsdao = new LogsDAO();
 
 
 const router = Router();
@@ -55,7 +56,6 @@ router.post('/selectaction/:id', async (req, res) => {
 
     const user = req.params;
     const { accion } = req.body;
-    console.log(accion);
 
 
     const selectedStock = await stockDAO.getStockById(accion);
@@ -92,7 +92,7 @@ router.post('/buyStock/:id', async (req, res) => {
         investorData: investorData,
         selectedStock: selectedStock
     }
-
+    logsdao.createLog("BUY_STOCK", "Compra de acción", new Date(), `Usuario ${user.id} compró la acción ${accionid}.`);
     res.render('generacionContratosModule', { data });
 });
 
@@ -131,7 +131,7 @@ router.post('/loadstocks/', async (req, res) => {
 router.post('/selectaction/', async (req, res) => {
 
     const { accion } = req.body;
-    console.log(accion);
+
 
 
     const selectedStock = await stockDAO.getStockById(accion);

@@ -55,7 +55,6 @@ router.post('/confirmarinformacionbursatil/:id', async (req, res) => {
         };
     }));
 
-    console.log(trandingsWithDetails); // Log de los trandings con country y stock
 
     const data = {
         user: user,

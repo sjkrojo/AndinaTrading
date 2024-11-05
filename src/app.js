@@ -27,7 +27,7 @@ app.use('/api/secondmodule', require("./routes/secondmodule"));
 app.use('/api/fithmodule', require("./routes/fithmodule"));
 app.use('/api/reports', require("./routes/reports"));
 app.use('/api/sixthmodule', require("./routes/sixmodule"));
-
+app.use('/api/logs', require("./routes/logs"));
 
 app.use(express.static(path.join(__dirname, 'public')));
 

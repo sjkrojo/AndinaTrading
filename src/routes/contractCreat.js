@@ -41,8 +41,6 @@ router.post('/creacionContrato', async (req, res) => {
 
     user = await userDAO.createUser(gmail, generateRandomPassword(), "investor", "investor");
     investor = await investorDAO.createInvestor({ name, address, phone, investmentCapacity });
-    console.log(houseshow);
-    console.log(investor);
     await tradingContractDAO.createTradingContract(accion.id, expirationDate, terms, false, amount, type, houseshow.id, investor);
 
     res.render('secondmodule');
@@ -56,12 +54,9 @@ router.post('/creacionContrato/:id', async (req, res) => {
     const user = req.params;
     const houseshow = await securityHouseDAO.getSecurityHouseById(mostrar);
     const accion = await stockDAO.getStockById(idaccion);
-    console.log("prueba");
+
     const usert = await userDAO.getUserById(user.id);
-    console.log(usert);
     const investor = await investorDAO.getInvestorById(usert.idtype);
-    console.log(houseshow);
-    console.log(investor);
 
     await tradingContractDAO.createTradingContract(accion.id, expirationDate, terms, false, amount, type, houseshow.id, investor);
 

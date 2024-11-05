@@ -7,7 +7,8 @@ const SecurityHouseDAO = require('../controller/securityhousedao');
 const UserDAO = require('../controller/userdao'); 
 const InvestorDAO = require('../controller/investordao'); 
 const StockInvestorDAO = require('../controller/stockinvestordao'); 
-
+const LogsDAO = require('../controller/logdao');
+const logsdao = new LogsDAO();
 const router = Router();
 const countryDAO = new CountryDAO();
 const companyDAO = new CompanyDAO();
@@ -66,11 +67,7 @@ router.post('/confirm/:id', async (req, res) => {
     const usersecu = await userDAO.getUserById(user.id);
 
     if(action === 'accept'){
-    
-    console.log(investorid);
-    console.log(amount);
-    console.log(stockactual.value);
-    console.log(stockid);updateStockQuantity
+
     money_total = amount *stockactual.value;
     money_security = money_total * 0.1;
     money_total = money_total -money_security;
@@ -96,7 +93,7 @@ router.post('/confirm/:id', async (req, res) => {
         user: user,
         tradingcontracts: tradingcontracts
     }
-
+    logsdao.createLog("CONFIRM", "Confirmación de acción en contrato con ID " + contractId, new Date(), "La acción '" + action + "' fue realizada en el contrato con ID " + contractId + " para el usuario con ID " + user.id + " con tipo de transacción '" + type + "' y cantidad " + amount);
     res.render('fithmodule', { data })
 })
 

@@ -145,16 +145,12 @@
             <input type="text" class="form-control" id="name" name="company_name" value="{{data.company.name}}"
                 required>
         </div>
-        <div class="mb-3">
-            <label for="country" class="form-label">País</label>
-            <input type="text" class="form-control" id="country" name="company_country" value="{{data.company.country}}"
-                required>
-        </div>
-        <div class="mb-3">
-            <label for="city" class="form-label">Ciudad</label>
-            <input type="text" class="form-control" id="city" name="company_city" value="{{data.company.city}}"
-                required>
-        </div>
+        <select class="form-select mb-3" name="location" required>
+            <option selected disabled>Seleccione un pais y su ciudad</option>
+            {{#each data.countries}}
+            <option value="{{id}}">{{countryName}}, {{cityName}}</option>
+            {{/each}}
+        </select>
 
         <h4>Valores de Stock</h4>
 

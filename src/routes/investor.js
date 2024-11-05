@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const InvestorDAO = require('../controller/investordao'); 
-
+const LogsDAO = require('../controller/logdao');
+const logsdao = new LogsDAO();
 const router = Router();
 const investorDAO = new InvestorDAO();
 
@@ -28,6 +29,7 @@ router.post('/deleteinvestor/:id', async (req, res) => {
         user: user,
         investors: investors
     };
+    logsdao.createLog("DELETE_INVESTOR", "Eliminación del inversionista con ID " + eliminar, new Date(), "El usuario con ID " + user.id + " eliminó al inversionista con ID " + eliminar + ".");
     res.render('crudinvestor', { data });
 });
 
@@ -87,6 +89,7 @@ router.post('/updateinvestor/:id', async (req, res) => {
             investors: investors,
         };
 
+        logsdao.createLog("UPDATE_INVESTOR", "Actualización del inversionista con ID " + id, new Date(), "El usuario con ID " + user.id + " actualizó al inversionista con ID " + id + ".");
         res.render('crudinvestor', { data });
   
 });
@@ -108,6 +111,7 @@ router.post('/createinvestor/:id', async (req, res) => {
             newInvestor 
         };
 
+        logsdao.createLog("CREATE_INVESTOR", "Creación de un nuevo inversionista", new Date(), "El usuario con ID " + user.id + " creó un nuevo inversionista: " + name + ".");
         res.render('crudinvestor', { data });
 
 });

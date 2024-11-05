@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta de Logs</title>
+    <link rel="icon" href="/icon.png" type="image/x-icon">
+    <link href="https://bootswatch.com/5/cyborg/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #ffffff;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            margin: 2rem auto;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #ff6600;
+            margin-bottom: 1.5rem;
+        }
+        .card {
+            border: 1px solid #ff6600;
+            border-radius: 8px;
+        }
+        .btn-primary {
+            background-color: #ff6600;
+            border-color: #ff6600;
+        }
+        .btn-primary:hover {
+            background-color: #e55a00;
+        }
+        .btn-success {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+        .btn-success:hover {
+            background-color: #218838;
+        }
+        label {
+            font-weight: bold;
+            color: #333;
+        }
+        .card-title {
+            color: #ff6600;
+            font-weight: bold;
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+        .card-body {
+            padding: 1.5rem;
+            background-color: #f9f9f9;
+            border-radius: 8px 8px 8px 8px;
+        }
+        .form-control {
+            border: 1px solid #ff6600;
+            border-radius: 4px;
+        }
+        .table {
+            margin-top: 1rem;
+            border-collapse: collapse;
+        }
+        .table th {
+            background-color: #ff6600;
+            color: #ffffff;
+            padding: 1rem;
+        }
+        .table td {
+            padding: 0.75rem;
+            vertical-align: middle;
+        }
+        .table-hover tbody tr:hover {
+            background-color: #ffe5cc;
+        }
+        .table-bordered {
+            border: 1px solid #ff6600;
+        }
+        .table-bordered th,
+        .table-bordered td {
+            border: 1px solid #ff6600;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container my-4">
+    <h2 class="text-center">Consulta de Logs</h2>
+
+        <form action="/backtomenu/{{data.user.id}}" method="post" class="mb-3">
+            <button type="submit" class="btn btn-secondary w-100">Volver</button>
+        </form>
+    <!-- Filtros de búsqueda por rango de fechas -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Filtrar Logs por Fecha</h5>
+            <form action="/api/logs/showlogs/{{data.user.id}}" method="post" class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="fechaInicio">Fecha de Inicio</label>
+                    <input type="date" id="fechaInicio" name="fechaInicio" class="form-control" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="fechaFin">Fecha de Fin</label>
+                    <input type="date" id="fechaFin" name="fechaFin" class="form-control" required>
+                </div>
+                <div class="form-group col-md-4 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">Buscar Logs</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Resultados de la consulta de logs -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Resultados de la Consulta</h5>
+            <table class="table table-bordered table-hover">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Tipo de acción</th>
+                        <th>Mensaje</th>
+                        <th>Contexto</th>
+                        <th>Fecha</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Aquí se insertarán los resultados de los logs -->
+                    {{#each data.logs}}
+                    <tr>
+                        <td>{{this.level}}</td>
+                        <td>{{this.message}}</td>
+                        <td>{{this.context}}</td>
+                        <td>{{this.timestamp}}</td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

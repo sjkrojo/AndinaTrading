@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const GeneratePDFReport = require('../controller/generatePDFReport');
-
+const LogsDAO = require('../controller/logdao');
+const logsdao = new LogsDAO();
 const generatePDFReport = new GeneratePDFReport();
 
 router.post('/generate-report/:id', async (req, res) => {
@@ -20,6 +21,7 @@ router.post('/generate-report/:id', async (req, res) => {
         country: country || null
     } : null;
 
+    logsdao.createLog("GENERATE_REPORT", "Generación de reporte PDF", new Date(), `El usuario con ID ${userId} generó un reporte de tipo ${reportType} con filtros: ${JSON.stringify(filters)}.`);
     await generatePDFReport.generatePDF(reportType, filters, res);
 });
 

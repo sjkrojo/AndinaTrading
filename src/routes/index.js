@@ -44,7 +44,6 @@ router.post('/backtomenu/:id', async (req, res) => {
 
     const typeuser = user.type; // Accede al tipo de usuario desde el objeto retornado
 
-    console.log(user); // Imprime el usuario completo
 
     if (typeuser === 'admin') {
         res.render('menuadmin', { user });

@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const CountryDAO = require('../controller/countrydao');
-
+const LogsDAO = require('../controller/logdao');
+const logsdao = new LogsDAO();
 const router = Router();
 const countryDAO = new CountryDAO();
 
@@ -61,6 +62,7 @@ router.post('/createcountry/:id', async (req, res) => {
         user: user,
         countries: countries
     }
+    logsdao.createLog("CREATE", "Creación del país " + country_name, new Date(), "Se creó el país " + country_name + " en la ciudad " + country_city + " por el usuario con ID " + user.id);
     res.render('crudcountry',  {data})
     }
 })
@@ -69,13 +71,14 @@ router.post('/deletecountry/:id', async (req, res) => {
 
     const  user  = req.params;
     const { eliminar } = req.body;
-    console.log(eliminar);
     const deleteCountry = await countryDAO.deleteCountry(eliminar);
     const countries = await countryDAO.getAllCountries();
     const data = {
         user: user,
         countries: countries
     }
+
+    logsdao.createLog("DELETE", "Eliminación del país con ID " + eliminar, new Date(), "Se eliminó el país con ID " + eliminar + " por el usuario con ID " + user.id);
     res.render('crudcountry', {data})
 
 })
@@ -119,6 +122,7 @@ router.post('/update/:id', async (req, res) => {
         user: user,
         countries: countries
     }
+    logsdao.createLog("UPDATE", "Actualización del país " + country_name, new Date(), "Se actualizó el país con ID " + idcountry + " y nombre " + country_name + " por el usuario con ID " + user.id);
     res.render('crudcountry',  {data})
 }
 })

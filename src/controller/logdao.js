@@ -7,15 +7,32 @@ class LogDAO {
     this.collection = db.collection('logs'); // Firestore collection for logs
   }
 
-  // Create a new log entry
-  async createLog(logDTO) {
-    const docRef = await this.collection.add({
-      level: logDTO.level,
-      message: logDTO.message,
-      timestamp: logDTO.timestamp,
-      context: logDTO.context // Optional additional context
-    });
-    return { id: docRef.id, ...logDTO }; // Return the created log entry with its ID
+// Create a new log entry
+async createLog(level, message, timestamp, context = null) {
+  const docRef = await this.collection.add({
+    level: level,
+    message: message,
+    timestamp: timestamp,
+    context: context // Optional additional context
+  });
+  return { id: docRef.id, level, message, timestamp, context }; // Return the created log entry with its ID and attributes
+}
+
+
+  // Get log entries between two dates
+  async getLogsBetweenDates(startDate, endDate) {
+    const snapshot = await this.collection
+      .where('timestamp', '>=', startDate)
+      .where('timestamp', '<=', endDate)
+      .get();
+
+    return snapshot.docs.map(doc => new LogDTO(
+      doc.id,
+      doc.data().level,
+      doc.data().message,
+      doc.data().timestamp,
+      doc.data().context
+    ));
   }
 
   // Get all log entries
