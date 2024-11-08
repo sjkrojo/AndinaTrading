@@ -66,9 +66,9 @@ body {
 
 </style>
 <body class="d-flex justify-content-center align-items-center vh-100">
-    <div class="card p-4 shadow card-white" style="width: 100%; max-width: 600px;">
-<h3 class="card-title text-center mb-4 card-title-orange">Andina Trading - Trading Contracts</h3>
 
+<h3 class="card-title text-center mb-4 card-title-orange">Andina Trading - Trading Contracts</h3>
+<div class="container mt-5">
         <!-- Back Button -->
         <div class="text-start mb-3">
             <a href="/" class="btn btn-secondary w-100">Back</a>
@@ -131,8 +131,18 @@ body {
                     <div class="card-body">
                         <form action="/api/fithmodule/confirm/{{data.user.id}}" method="POST">
                             <input type="hidden" name="contractId" value="{{data.selectedContract.id}}">
-                            <p><strong>Contract Name:</strong> {{data.selectedContract.name}}</p>
-                            <p><strong>Description:</strong> {{data.selectedContract.expirationDate}}</p>
+                            <p><strong>Stock:</strong> {{data.selectedstock.name}}</p>
+                            <p><strong>Descripcion del Stock:</strong> {{data.selectedstock.description}}</p>
+                            <p><strong>Valor del Stock:</strong> {{data.selectedstock.value}}</p>
+                            <p><strong>Compañia:</strong> {{data.selectedstock.company}}</p>
+                            <p><strong>Cantidad disponible:</strong> {{data.selectedstock.inStorage}}</p>
+                            <p><strong>Fecha de expiración del contrato:</strong> {{data.selectedContract.expirationDate}}</p>
+                            <p><strong>Tipo de contrato:</strong> {{data.selectedContract.type}}</p>
+                            <p><strong>Cantidad a comprar/vender:</strong> {{data.selectedContract.amount}}</p>
+                            <p><strong>Inversor:</strong> {{data.selecteduser.name}}</p>
+                            <p><strong>Perfil de Riesgo:</strong> {{data.selecteduser.riskProfile}}</p>
+                            <p><strong>Capacidad de inversion:</strong> {{data.selecteduser.investmentCapacity}}</p>
+                            <p><strong>Inversor:</strong>{{data.selectedContract.investorDTO.id}}</p>
                             <input type="hidden" name="stockid" value="{{data.selectedContract.stock}}">
                             <input type="hidden" name="amount" value="{{data.selectedContract.amount}}">
                             <input type="hidden" name="type" value="{{data.selectedContract.type}}">
@@ -143,7 +153,7 @@ body {
                                     <option value="accept">Aceptar</option>
                                     <option value="deny">Denegar</option>
                                 </select>
-                            <button type="submit" class="btn btn-lg btn-primary w-100 mt-2">Submit Decision</button>
+                            <button type="submit" id="botonEvento" class="btn btn-lg btn-primary w-100 mt-2">Submit Decision</button>
                         </form>
                     </div>
                 </div>
@@ -159,8 +169,14 @@ body {
                     </div>
                     <div class="card-body">
                             <input type="hidden" name="contractId" value="{{data.historyContract.id}}">
-                            <p><strong>Contract Name:</strong> {{data.historyContract.name}}</p>
-                            <p><strong>Description:</strong> {{data.historyContract.expirationDate}}</p>
+                            <p><strong>Stock:</strong> {{data.selectedstock.name}}</p>
+                            <p><strong>Descripcion del Stock:</strong> {{data.selectedstock.description}}</p>
+                            <p><strong>Valor del Stock:</strong> {{data.selectedstock.value}}</p>
+                            <p><strong>Compañia:</strong> {{data.selectedstock.company}}</p>
+                            <p><strong>Cantidad disponible:</strong> {{data.selectedstock.inStorage}}</p>
+                            <p><strong>Fecha de expiración del contrato:</strong> {{data.historyContract.expirationDate}}</p>
+                            <p><strong>Tipo de contrato:</strong> {{data.historyContract.type}}</p>
+                            <p><strong>Cantidad a comprar/vender:</strong> {{data.historyContract.amount}}</p>
                             <input type="hidden" name="stockid" value="{{data.historyContract.stock}}">
                             <input type="hidden" name="amount" value="{{data.historyContract.amount}}">
                             <input type="hidden" name="investorid" value="{{data.historyContract.investorDTO.id}}">
@@ -169,7 +185,25 @@ body {
             </div>
         {{/if}}
         </div>
-    </div>
-
+</div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+
+<script>
+    const socket = io();
+    const company = '{{data.selectedstock.company}}';
+    const cantidad = '{{data.selectedContract.amount}}';
+    const type = '{{data.selectedContract.type}}';
+    const value = '{{data.selectedstock.value}}';
+    // Obtener el botón por su id y agregarle un evento de clic
+    document.getElementById('botonEvento').addEventListener('click', async (event) => {
+        
+        let mensaje_data = 'Tipo: '+ type+', Cantidad: '+cantidad+', Valor:'+value+', Compañia: '+company;
+        const data = { mensaje:mensaje_data };
+        
+        // Emitir el evento al servidor con los datos
+        socket.emit('evento_cliente', data);
+    });
+</script>
+
 </body>

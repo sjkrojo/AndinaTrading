@@ -7,21 +7,21 @@ class StockInvestorDAO {
         this.investorsCollection = db.collection('investors'); // Main collection for investors
     }
 
-// Method to create a stock entry for an investor inside the 'stocks' subcollection
+// Método para crear una entrada de stock para un inversor dentro de la subcolección 'stocks'
 async createStockForInvestor(investorId, quantity, originalPrice, actualPrice, stockId, date) {
-    const investorDocRef = this.investorsCollection.doc(investorId); // Reference to the investor document
-    const stockCollectionRef = investorDocRef.collection('stocks'); // Reference to the 'stocks' subcollection
+    const investorDocRef = this.investorsCollection.doc(investorId); // Referencia al documento del inversor
+    const stockCollectionRef = investorDocRef.collection('stocks'); // Referencia a la subcolección 'stocks'
 
-    // Create a new stock entry
+    // Crear una nueva entrada de stock con consistencia en camelCase
     const docRef = await stockCollectionRef.add({
         quantity,
-        originalPrice, // Use camelCase for consistency
-        actualPrice,   // Use camelCase for consistency
-        stockId,       // Use camelCase for consistency
+        originalPrice,
+        actualPrice,
+        stockId,
         date
     });
 
-    // Return the new stock data along with the document ID
+    // Retornar la nueva entrada de stock junto con el ID del documento
     return { id: docRef.id, quantity, originalPrice, actualPrice, stockId, date };
 }
 

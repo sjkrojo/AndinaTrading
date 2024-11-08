@@ -136,6 +136,7 @@ router.post('/login', async (req, res) => {
 
             const tradingcontractsexpired = await tradingContractDAO.checkAndMoveExpiredContracts(user.idtype);
             const tradingcontracts = await tradingContractDAO.getContractsBySecurityHouseId(user.idtype);
+            console.log(tradingcontracts);
             const historyContracts = await tradingContractDAO.getAllTradingContractsHistory()
             const data = {
                 user: user,

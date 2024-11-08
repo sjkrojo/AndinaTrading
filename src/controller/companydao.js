@@ -51,14 +51,21 @@ async increaseStockQuantity(companyId, amount) {
   }
 
   // Verificar que haya suficientes stocks vendidos para reducir la cantidad deseada
-  if ((stock.soldStocks || 0) < amount) {
-    throw new Error(`Insufficient sold stocks. Available: ${stock.soldStocks || 0}`);
+  if ((stock.amountSold || 0) < amount) {
+    throw new Error(`Insufficient sold stocks. Available: ${stock.stockInStorage || 0}`);
   }
 
   // Actualizar el stock en almacenamiento y el stock vendido
-  const newStockInStorage = stock.stockInStorage + amount;
-  const newSoldStocks = stock.soldStocks - amount;
-
+  const newStockInStorage = stock.inStorage + amount;
+  const newSoldStocks = stock.amountSold - amount;
+  const randomArray = [
+    Math.floor(Math.random() * 100),  // Random integer between 0 and 99
+    Math.floor(Math.random() * 100),  // Random integer between 0 and 99
+    Math.random(),                    // Random decimal between 0 and 1
+    Math.random().toString(36).substring(2, 7),  // Random alphanumeric string
+    Date.now()                         // Current timestamp
+  ];
+  
   // Actualizar el stock con los nuevos valores
   await this.stockDAO.updateStock(
     stockId,
@@ -68,7 +75,8 @@ async increaseStockQuantity(companyId, amount) {
     stock.value,
     stock.company,
     newStockInStorage,
-    newSoldStocks
+    newSoldStocks,
+    randomArray
   );
 
   return {
@@ -105,7 +113,13 @@ async updateStockQuantity(companyId, amount) {
   // Actualizar el stock en almacenamiento y el stock vendido
   const newStockInStorage = stock.stockInStorage - amount;
   const newSoldStocks = (stock.soldStocks || 0) + amount; // Inicializar soldStocks en 0 si no existe
-
+  const randomArray = [
+    Math.floor(Math.random() * 100),  // Random integer between 0 and 99
+    Math.floor(Math.random() * 100),  // Random integer between 0 and 99
+    Math.random(),                    // Random decimal between 0 and 1
+    Math.random().toString(36).substring(2, 7),  // Random alphanumeric string
+    Date.now()                         // Current timestamp
+  ];
   // Actualizar el stock con los nuevos valores
   await this.stockDAO.updateStock(
     stockId,
@@ -115,7 +129,8 @@ async updateStockQuantity(companyId, amount) {
     stock.value,
     stock.company,
     newStockInStorage,
-    newSoldStocks
+    newSoldStocks,
+    randomArray
   );
 
   return {

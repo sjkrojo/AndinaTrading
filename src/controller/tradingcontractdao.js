@@ -84,7 +84,7 @@ async getTradingContractById(id) {
 
     // Get all trading contracts by security house ID
     async getContractsBySecurityHouseId(securityHouseId) {
-      const snapshot = await this.collection.where('securityHouseDTO.id', '==', securityHouseId).get();
+      const snapshot = await this.collection.where('securityHouseDTO', '==', securityHouseId).get();
       if (snapshot.empty) return []; // Return empty array if no contracts found
 
       return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -156,7 +156,7 @@ async getTradingContractsByRiskProfileAndLocation(riskProfile, location) {
 async checkAndMoveExpiredContracts(securityHouseId) {
   try {
       // Fetch all trading contracts associated with the given security house ID
-      const snapshot = await this.collection.where('securityHouseDTO.id', '==', securityHouseId).get();
+      const snapshot = await this.collection.where('securityHouseDTO', '==', securityHouseId).get();
 
       if (snapshot.empty) {
           console.log(`No trading contracts found for security house ID ${securityHouseId}.`);

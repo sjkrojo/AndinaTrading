@@ -136,11 +136,11 @@
                 Transacciones en Tiempo Real
             </div>
             <div class="card-body">
-                <ul class="list-group" id="transacciones">
-                    <li class="list-group-item">Compra de 100 acciones - Empresa X</li>
-                    <li class="list-group-item">Venta de 50 acciones - Empresa Y</li>
-                    <li class="list-group-item">Compra de 200 acciones - Empresa Z</li>
-                </ul>
+    <!-- Lista para mostrar los contratos -->
+    <ul id="contractList">
+        <!-- Los contratos se añadirán aquí -->
+    </ul>
+
             </div>
         </div>
     </div>
@@ -229,5 +229,6 @@
     });
 </script>
 <!-- Bootstrap JS and dependencies -->
-
+<script src="/socket.io/socket.io.js"></script>
+<script defer src="/script.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>

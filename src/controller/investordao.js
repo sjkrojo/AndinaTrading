@@ -81,6 +81,32 @@ async decrementInvestmentCapacity(id, totalAmount) {
     return { id: updatedDoc.id, ...updatedDoc.data() };
 }
 
+// New function to add a value to investmentCapacity and update risk profile
+async incrementInvestmentCapacity(id, totalAmount) {
+    const doc = await this.collection.doc(id).get();
+    if (!doc.exists) return null;
+
+    // Get the current investmentCapacity
+    const currentData = doc.data();
+    let currentInvestmentCapacity = currentData.investmentCapacity;
+
+    // Calculate the new investmentCapacity by adding the totalAmount
+    let newInvestmentCapacity = currentInvestmentCapacity + totalAmount;
+
+    // Calculate the new risk profile based on the updated investmentCapacity
+    const riskProfile = this.calculateRiskProfile(newInvestmentCapacity);
+
+    // Update the investmentCapacity and riskProfile in Firestore
+    await this.collection.doc(id).update({
+        investmentCapacity: newInvestmentCapacity,
+        riskProfile
+    });
+    
+    const updatedDoc = await this.collection.doc(id).get();
+
+    return { id: updatedDoc.id, ...updatedDoc.data() };
+}
+
 
     async getInvestors() {
         const snapshot = await this.collection.get();

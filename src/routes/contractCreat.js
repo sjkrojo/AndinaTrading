@@ -108,6 +108,8 @@ router.post('/ventaContrato/:id', async (req, res) => {
         houseIds.map(id => securityHouseDAO.getSecurityHouseById(id))
     );
 
+    console.log(houseDefinitive.id);
+
     try {
         // Crear el contrato de venta trading
         await tradingContractDAO.createTradingContract(user.id, expirationDate, terms, false, amount, orderType, houseDefinitive, investor);
